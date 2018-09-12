@@ -2,6 +2,7 @@ package com.durin93.bookmanagement.service;
 
 import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.dto.UserDto;
+import com.durin93.bookmanagement.exception.UnAuthenticationException;
 import com.durin93.bookmanagement.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,23 +22,30 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserDto regist(UserDto userDto) throws CannotProceedException {
-        logger.debug(userDto.toString());
+    public UserDto regist(UserDto userDto){
         isExist(userDto);
         return userRepository.save(userDto.toUser()).toUserDto();
     }
 
-    public UserDto login(String userId, String password) throws AuthenticationException {
-        User user = userRepository.findByUserId(userId).orElseThrow(() -> new NullPointerException("존재하지 않는 아이디입니다."));
+    public UserDto login(String userId, String password) throws UnAuthenticationException {
+        User user = findByUserId(userId);
         user.matchPassword(password);
         return user.toUserDto();
     }
 
-    public void isExist(UserDto userDto) throws CannotProceedException {
+    public void isExist(UserDto userDto) throws UnAuthenticationException {
         if(userRepository.findByUserId(userDto.getUserId()).isPresent()){
-            throw new CannotProceedException("이미 존재하는 아이디 입니다.");
+            throw new UnAuthenticationException("이미 존재하는 아이디 입니다.");
         }
     }
 
+
+    public UserDto findById(long id) {
+        return userRepository.findById(id).orElseThrow(() -> new NullPointerException("존재하지 않는 아이디입니다.")).toUserDto();
+    }
+
+    public User findByUserId(String userId) {
+        return userRepository.findByUserId(userId).orElseThrow(() -> new NullPointerException("존재하지 않는 아이디입니다."));
+    }
 
 }

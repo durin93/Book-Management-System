@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import javax.naming.AuthenticationException;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -31,6 +33,12 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    public void regist_fail_unAuthentication() {
+        ResponseEntity<UserDto> response = template().postForEntity("/api/users", new UserDto("durin93", "password", "name"), UserDto.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
+    }
+
+    @Test
     public void login() {
         UserDto loginUser = new UserDto("durin93", "1234");
 
@@ -42,6 +50,13 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         assertThat(response.getBody().getUserId(), is("durin93"));
 
         logger.debug(response.getBody().toString());
+    }
+
+    @Test
+    public void login_fail_unAuthentication() {
+        ResponseEntity<UserDto> response =
+                template().postForEntity("/api/users/login", new UserDto("durin93", "12345"), UserDto.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
 
 

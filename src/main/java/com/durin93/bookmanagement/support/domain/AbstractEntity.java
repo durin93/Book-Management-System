@@ -24,11 +24,11 @@ public class AbstractEntity {
     public AbstractEntity() {
     }
 
-    public AbstractEntity(long id) {
+    public AbstractEntity(Long id) {
         this.id = id;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

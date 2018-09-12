@@ -38,7 +38,7 @@ public class UserDto {
         this.name = name;
     }
 
-    public UserDto(long id, String userId, String password, String name) {
+    public UserDto(Long id, String userId, String password, String name) {
         this(userId, password, name);
         this.id = id;
     }

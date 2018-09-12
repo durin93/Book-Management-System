@@ -1,6 +1,8 @@
 package com.durin93.bookmanagement.domain;
 
 import com.durin93.bookmanagement.dto.UserDto;
+import com.durin93.bookmanagement.exception.UnAuthenticationException;
+import com.durin93.bookmanagement.exception.UnAuthorizationException;
 import com.durin93.bookmanagement.support.domain.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -34,7 +36,7 @@ public class User extends AbstractEntity {
         this(0L, userId, password, name);
     }
 
-    public User(long id, String userId, String password, String name) {
+    public User(Long id, String userId, String password, String name) {
         super(id);
         this.userId = userId;
         this.password = password;
@@ -62,9 +64,15 @@ public class User extends AbstractEntity {
         return false;
     }
 
-    public void matchPassword(String password) throws AuthenticationException {
+    public void matchPassword(String password) throws UnAuthenticationException {
         if(!this.password.equals(password)){
-            throw new AuthenticationException("비밀번호가 틀렸습니다.");
+            throw new UnAuthenticationException("비밀번호가 틀렸습니다.");
+        }
+    }
+
+    public void checkManager() {
+        if(!this.name.equals("관리자")){
+            throw new UnAuthorizationException("관리자만 접근 가능합니다.");
         }
     }
 
