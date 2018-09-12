@@ -1,0 +1,1 @@
+insert into user (id,user_id,password,name,create_date,modified_date)  values (0, 'durin93', '1234','관리자',current_time,current_time);

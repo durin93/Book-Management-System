@@ -1,16 +1,20 @@
 package com.durin93.bookmanagement.domain;
 
+import com.durin93.bookmanagement.dto.UserDto;
 import com.durin93.bookmanagement.support.domain.AbstractEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.naming.AuthenticationException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.Size;
 
 @Entity
 public class User extends AbstractEntity {
+    public static final GuestUser GUEST_USER = new GuestUser();
 
     @Size(min = 3, max = 20)
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 20, unique = true)
     private String userId;
 
     @Size(min = 3, max = 20)
@@ -49,6 +53,27 @@ public class User extends AbstractEntity {
         return name;
     }
 
+    public UserDto toUserDto() {
+        return new UserDto(getId(),userId,password,name);
+    }
+
+    @JsonIgnore
+    public boolean isGuestUser() {
+        return false;
+    }
+
+    public void matchPassword(String password) throws AuthenticationException {
+        if(!this.password.equals(password)){
+            throw new AuthenticationException("비밀번호가 틀렸습니다.");
+        }
+    }
+
+    private static class GuestUser extends User {
+        @Override
+        public boolean isGuestUser() {
+            return true;
+        }
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -78,4 +103,5 @@ public class User extends AbstractEntity {
                 ", name='" + name + '\'' +
                 '}';
     }
+
 }
