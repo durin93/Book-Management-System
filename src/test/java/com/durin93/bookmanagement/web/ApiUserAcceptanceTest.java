@@ -8,11 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import javax.naming.AuthenticationException;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+
 
 public class ApiUserAcceptanceTest extends AcceptanceTest {
 
@@ -25,7 +24,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         ResponseEntity<UserDto> response =
                 template().postForEntity("/api/users", createUser, UserDto.class);
 
-        assertNotNull(response.getBody().getLink("self"));
+        assertNotNull(response.getBody().getSelfDescription());
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
         assertThat(response.getBody(), is(createUser));
 
@@ -45,7 +44,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         ResponseEntity<UserDto> response =
                 template().postForEntity("/api/users/login", loginUser, UserDto.class);
 
-        assertNotNull(response.getBody().getLink("self"));
+        assertNotNull(response.getBody().getSelfDescription());
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody().getUserId(), is("durin93"));
 

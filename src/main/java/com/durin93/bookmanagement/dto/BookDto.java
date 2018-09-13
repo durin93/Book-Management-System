@@ -1,15 +1,13 @@
 package com.durin93.bookmanagement.dto;
 
 import com.durin93.bookmanagement.domain.Book;
-import com.durin93.bookmanagement.domain.User;
+import com.durin93.bookmanagement.support.domain.SelfDescription;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.hateoas.Link;
 
-import javax.persistence.Lob;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
 
-public class BookDto {
+public class BookDto{
 
     private Long id;
 
@@ -21,8 +19,10 @@ public class BookDto {
 
     private Boolean rentable = true;
 
-    private List<Link> links = new ArrayList<>();
+    private String userId;
 
+    @JsonUnwrapped
+    private SelfDescription selfDescription = new SelfDescription();
 
     public BookDto(){
 
@@ -39,6 +39,17 @@ public class BookDto {
         this.rentable = rentable;
     }
 
+    public SelfDescription getSelfDescription() {
+        return selfDescription;
+    }
+
+    public Link getLink(String rel){
+        return selfDescription.getLink(rel);
+    }
+
+    public void setSelfDescription(SelfDescription selfDescription) {
+        this.selfDescription = selfDescription;
+    }
 
     public Long getId() {
         return id;
@@ -68,30 +79,12 @@ public class BookDto {
         this.rentable = rentable;
     }
 
-    public List<Link> getLinks() {
-        return links;
-    }
-
-    public void setLinks(List<Link> links) {
-        this.links = links;
-    }
-
     public Book toBook() {
         return new Book(title, content);
     }
 
-
-    public void add(Link link) {
-        links.add(link);
-    }
-
-    public Link getLink(String rel) {
-        for (Link link : links) {
-            if (link.getRel().equals(rel)) {
-                return link;
-            }
-        }
-        return null;
+    public void add(Link link){
+        selfDescription.add(link);
     }
 
     @Override
@@ -119,7 +112,7 @@ public class BookDto {
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", rentable=" + rentable +
-                ", links=" + links +
+                ", links=" + selfDescription +
                 '}';
     }
 }

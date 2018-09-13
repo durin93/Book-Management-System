@@ -1,14 +1,15 @@
 package com.durin93.bookmanagement.dto;
 
 import com.durin93.bookmanagement.domain.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.durin93.bookmanagement.support.domain.Level;
+import com.durin93.bookmanagement.support.domain.SelfDescription;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.ResourceSupport;
 
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class UserDto {
 
@@ -23,7 +24,10 @@ public class UserDto {
     @Size(min = 3, max = 20)
     private String name;
 
-    private List<Link> links = new ArrayList<>();
+    private Level level;
+
+    @JsonUnwrapped
+    private SelfDescription selfDescription = new SelfDescription();
 
     public UserDto() {
     }
@@ -43,18 +47,15 @@ public class UserDto {
         this.id = id;
     }
 
+    public UserDto(Long id, String userId, String password, String name, Level level) {
+        this(id, userId, password, name);
+        this.level = level;
+    }
 
     public Long getId() {
         return id;
     }
 
-    public List<Link> getLinks() {
-        return links;
-    }
-
-    public void setLinks(List<Link> links) {
-        this.links = links;
-    }
 
     public String getUserId() {
         return userId;
@@ -80,23 +81,28 @@ public class UserDto {
         this.name = name;
     }
 
+    public SelfDescription getSelfDescription() {
+        return selfDescription;
+    }
+
+    public void setSelfDescription(SelfDescription selfDescription) {
+        this.selfDescription = selfDescription;
+    }
+
+    public Link getLink(String rel) {
+        return selfDescription.getLink(rel);
+    }
+
+
     public User toUser() {
-        return new User(this.userId, this.password, this.name);
+        return new User(this.userId, this.password, this.name, level);
     }
 
 
     public void add(Link link) {
-        links.add(link);
+        selfDescription.add(link);
     }
 
-    public Link getLink(String rel) {
-        for (Link link : links) {
-            if (link.getRel().equals(rel)) {
-                return link;
-            }
-        }
-        return null;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -125,7 +131,8 @@ public class UserDto {
                 ", userId='" + userId + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
-                ", links=" + links +
+                ", level=" + level +
+                ", links=" + selfDescription +
                 '}';
     }
 }

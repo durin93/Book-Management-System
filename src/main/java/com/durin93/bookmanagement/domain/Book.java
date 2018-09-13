@@ -3,6 +3,7 @@ package com.durin93.bookmanagement.domain;
 import com.durin93.bookmanagement.dto.BookDto;
 import com.durin93.bookmanagement.support.domain.AbstractEntity;
 
+import javax.naming.CannotProceedException;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Optional;
@@ -57,11 +58,30 @@ public class Book extends AbstractEntity {
         return new BookDto(getId(), title, content, rentable);
     }
 
+
     public Book update(BookDto bookDto) {
         title = Optional.ofNullable(bookDto.getTitle()).orElse(title);
         content = Optional.ofNullable(bookDto.getContent()).orElse(content);
         return this;
     }
+
+    public void rent(User loginUser) throws CannotProceedException {
+        if(!rentable){
+            throw new CannotProceedException("이미 대여중인 도서입니다.");
+        }
+        this.rentable = false;
+        this.render = loginUser;
+    }
+
+    public void giveBack(User loginUser) throws CannotProceedException {
+        if(rentable){
+            throw new CannotProceedException("이미 반납된 도서입니다.");
+        }
+        this.rentable = true;
+        this.render = null;
+    }
+
+
 
 
     @Override
@@ -95,7 +115,6 @@ public class Book extends AbstractEntity {
                 ", rentable=" + rentable +
                 '}';
     }
-
 
 
 }

@@ -4,11 +4,14 @@ import com.durin93.bookmanagement.dto.UserDto;
 import com.durin93.bookmanagement.exception.UnAuthenticationException;
 import com.durin93.bookmanagement.exception.UnAuthorizationException;
 import com.durin93.bookmanagement.support.domain.AbstractEntity;
+import com.durin93.bookmanagement.support.domain.Level;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.naming.AuthenticationException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -28,12 +31,16 @@ public class User extends AbstractEntity {
     @Column(nullable = false, length = 20)
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    private Level level = Level.USER;
+
     public User() {
 
     }
 
-    public User(String userId, String password, String name) {
+    public User(String userId, String password, String name, Level level) {
         this(0L, userId, password, name);
+        this.level = level;
     }
 
     public User(Long id, String userId, String password, String name) {
@@ -42,6 +49,7 @@ public class User extends AbstractEntity {
         this.password = password;
         this.name = name;
     }
+
 
     public String getUserId() {
         return userId;
@@ -56,7 +64,7 @@ public class User extends AbstractEntity {
     }
 
     public UserDto toUserDto() {
-        return new UserDto(getId(),userId,password,name);
+        return new UserDto(getId(),userId,password,name,level);
     }
 
     @JsonIgnore
@@ -71,10 +79,11 @@ public class User extends AbstractEntity {
     }
 
     public void checkManager() {
-        if(!this.name.equals("관리자")){
+        if(!level.isManager()){
             throw new UnAuthorizationException("관리자만 접근 가능합니다.");
         }
     }
+
 
     private static class GuestUser extends User {
         @Override
