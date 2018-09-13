@@ -10,5 +10,5 @@ public interface BookRepository extends JpaRepository<Book,Long> {
 
 
     Optional<Book> findFirstByAndIdAndRentableIsTrue(Long id);
-
+    Optional<Book> findFirstByAndIdAndRentableIsFalse(Long id);
 }

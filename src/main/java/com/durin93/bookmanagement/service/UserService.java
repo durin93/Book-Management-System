@@ -6,10 +6,8 @@ import com.durin93.bookmanagement.exception.UnAuthenticationException;
 import com.durin93.bookmanagement.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.naming.AuthenticationException;
-import javax.naming.CannotProceedException;
 
 @Service
 public class UserService {
@@ -18,23 +16,26 @@ public class UserService {
 
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtService jwtService;
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public UserDto regist(UserDto userDto){
+    public UserDto regist(UserDto userDto) {
         isExist(userDto);
         return userRepository.save(userDto.toUser()).toUserDto();
     }
 
-    public UserDto login(String userId, String password) throws UnAuthenticationException {
-        User user = findByUserId(userId);
-        user.matchPassword(password);
-        return user.toUserDto();
+    public User login(UserDto userDto) throws UnAuthenticationException {
+        User user = findByUserId(userDto.getUserId());
+        user.matchPassword(userDto.getPassword());
+        return user;
     }
 
     public void isExist(UserDto userDto) throws UnAuthenticationException {
-        if(userRepository.findByUserId(userDto.getUserId()).isPresent()){
+        if (userRepository.findByUserId(userDto.getUserId()).isPresent()) {
             throw new UnAuthenticationException("이미 존재하는 아이디 입니다.");
         }
     }

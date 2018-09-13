@@ -1,16 +1,18 @@
 package com.durin93.bookmanagement.web;
 
+import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.dto.UserDto;
-import com.durin93.bookmanagement.exception.UnAuthenticationException;
+import com.durin93.bookmanagement.service.JwtService;
 import com.durin93.bookmanagement.service.UserService;
-import com.durin93.bookmanagement.support.HttpSessionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
@@ -22,24 +24,25 @@ public class ApiUserController {
 
     private UserService userService;
 
-    public ApiUserController(UserService userService) {
-        this.userService = userService;
-    }
+    private JwtService jwtService;
+
 
     @PostMapping("")
-    public ResponseEntity<UserDto> regist(@RequestBody UserDto userDto)  {
+    public ResponseEntity<UserDto> regist(@RequestBody UserDto userDto) {
         UserDto registerUser = userService.regist(userDto);
         addSelfDescription(registerUser);
         return new ResponseEntity<>(registerUser, HttpStatus.CREATED);
     }
 
+
     @PostMapping("login")
-    public ResponseEntity<UserDto> login(@RequestBody UserDto userDto, HttpSession session) throws UnAuthenticationException {
-        UserDto loginUser = userService.login(userDto.getUserId(), userDto.getPassword());
-        session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, loginUser);
-        addSelfDescription(loginUser);
-        return new ResponseEntity<>(loginUser, HttpStatus.OK);
+    public ResponseEntity<UserDto> login(@RequestBody UserDto userDto, HttpServletResponse response) throws UnsupportedEncodingException {
+        User loginUser = userService.login(userDto);
+        String token = jwtService.create("userId", loginUser.getUserId());
+        response.setHeader("Authorization", token);
+        return new ResponseEntity<>(loginUser.toUserDto(), HttpStatus.OK);
     }
+
 
     @GetMapping("{id}")
     public ResponseEntity<UserDto> show(@PathVariable Long id) {
@@ -48,8 +51,17 @@ public class ApiUserController {
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
-    private void addSelfDescription(UserDto userDto){
+    private void addSelfDescription(UserDto userDto) {
         userDto.add(linkTo(ApiUserController.class).slash(userDto.getId()).withSelfRel());
     }
 
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Autowired
+    public void setJwtService(JwtService jwtService) {
+        this.jwtService = jwtService;
+    }
 }

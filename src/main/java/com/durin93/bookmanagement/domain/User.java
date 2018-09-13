@@ -7,7 +7,6 @@ import com.durin93.bookmanagement.support.domain.AbstractEntity;
 import com.durin93.bookmanagement.support.domain.Level;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.naming.AuthenticationException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -50,7 +49,6 @@ public class User extends AbstractEntity {
         this.name = name;
     }
 
-
     public String getUserId() {
         return userId;
     }
@@ -64,7 +62,7 @@ public class User extends AbstractEntity {
     }
 
     public UserDto toUserDto() {
-        return new UserDto(getId(),userId,password,name,level);
+        return new UserDto(getId(), userId, password, name, level);
     }
 
     @JsonIgnore
@@ -73,13 +71,13 @@ public class User extends AbstractEntity {
     }
 
     public void matchPassword(String password) throws UnAuthenticationException {
-        if(!this.password.equals(password)){
+        if (!this.password.equals(password)) {
             throw new UnAuthenticationException("비밀번호가 틀렸습니다.");
         }
     }
 
     public void checkManager() {
-        if(!level.isManager()){
+        if (!level.isManager()) {
             throw new UnAuthorizationException("관리자만 접근 가능합니다.");
         }
     }

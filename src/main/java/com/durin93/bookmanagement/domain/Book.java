@@ -26,15 +26,14 @@ public class Book extends AbstractEntity {
     @Column(nullable = false)
     private Boolean rentable = true;
 
-    public Book(){
+    public Book() {
 
     }
 
-    public Book(String title, String content){
+    public Book(String title, String content) {
         this.title = title;
         this.content = content;
     }
-
 
 
     public String getContent() {
@@ -66,7 +65,7 @@ public class Book extends AbstractEntity {
     }
 
     public void rent(User loginUser) throws CannotProceedException {
-        if(!rentable){
+        if (!rentable) {
             throw new CannotProceedException("이미 대여중인 도서입니다.");
         }
         this.rentable = false;
@@ -74,14 +73,12 @@ public class Book extends AbstractEntity {
     }
 
     public void giveBack(User loginUser) throws CannotProceedException {
-        if(rentable){
+        if (rentable) {
             throw new CannotProceedException("이미 반납된 도서입니다.");
         }
         this.rentable = true;
         this.render = null;
     }
-
-
 
 
     @Override

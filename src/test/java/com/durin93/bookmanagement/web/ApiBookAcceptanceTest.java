@@ -1,25 +1,14 @@
 package com.durin93.bookmanagement.web;
 
-import com.durin93.bookmanagement.domain.Book;
 import com.durin93.bookmanagement.dto.BookDto;
-import com.durin93.bookmanagement.dto.UserDto;
 import com.durin93.bookmanagement.support.test.AcceptanceTest;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.*;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.lang.Nullable;
-import org.springframework.web.client.RequestCallback;
-import org.springframework.web.client.ResponseExtractor;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
-import reactor.core.publisher.Mono;
-
-import java.util.Arrays;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -30,82 +19,108 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void regist() {
-        BookDto bookDto = createBookDefault();
+        BookDto createBookDto = createBookDefault();
+
+        HttpEntity<BookDto> requestEntity = httpEntity(jwtHeaders(findManagerUser()),createBookDto);
 
         ResponseEntity<BookDto> response =
-                basicAuthTemplate(findManagerUser()).postForEntity("/api/books", bookDto, BookDto.class);
+                template().postForEntity("/api/books", requestEntity, BookDto.class);
+
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
-        assertThat(response.getBody(), is(bookDto));
+        assertThat(response.getBody(), is(createBookDto));
         assertNotNull(response.getBody().getSelfDescription());
     }
 
     @Test
     public void regist_fail_unAuthorization() {
-        BookDto bookDto = createBookDefault();
+        HttpEntity<BookDto> requestEntity = httpEntity(jwtHeaders(findNormalUser()),createBookDefault());
 
         ResponseEntity<BookDto> response =
-                basicAuthTemplate(findByUserId("lsc109")).postForEntity("/api/books", bookDto, BookDto.class);
+                template().postForEntity("/api/books", requestEntity, BookDto.class);
         assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 
 
     @Test
     public void update() {
+        HttpEntity<BookDto> requestEntity = httpEntity(jwtHeaders(findManagerUser()),createBookDefault());
         String resourceUrl =
-                basicAuthTemplate(findManagerUser()).
-                        postForEntity("/api/books", createBookDefault(), BookDto.class)
+                template().
+                        postForEntity("/api/books", requestEntity, BookDto.class)
                         .getBody().getLink("self").getHref();
 
         BookDto updateBookDto = new BookDto("토끼와거북이", "어린왕자 이야기");
-        basicAuthTemplate(findManagerUser()).put(resourceUrl, updateBookDto);
 
-        ResponseEntity<BookDto> dbBook = getResource(resourceUrl, BookDto.class, findManagerUser());
-        assertThat(dbBook.getStatusCode(), is(HttpStatus.OK));
-        assertThat(dbBook.getBody(), is(updateBookDto));
-        assertNotNull(dbBook.getBody().getSelfDescription());
+        requestEntity = httpEntity(jwtHeaders(findManagerUser()),updateBookDto);
+
+        ResponseEntity<BookDto> response =
+        template().exchange(resourceUrl,HttpMethod.PUT,requestEntity,BookDto.class);
+
+
+        assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
+        assertThat(response.getBody(), is(updateBookDto));
+        assertNotNull(response.getBody().getSelfDescription());
+    }
+
+    @Test
+    public void update_fail_unAuthorization() {
+        HttpEntity<BookDto> requestEntity = httpEntity(jwtHeaders(findManagerUser()),createBookDefault());
+        String resourceUrl =
+                template().
+                        postForEntity("/api/books", requestEntity, BookDto.class)
+                        .getBody().getLink("self").getHref();
+        BookDto updateBookDto = new BookDto("토끼와거북이", "어린왕자 이야기");
+        requestEntity = httpEntity(jwtHeaders(findNormalUser()),updateBookDto);
+
+        ResponseEntity<BookDto> response =
+                template().exchange(resourceUrl,HttpMethod.PUT,requestEntity,BookDto.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
     }
 
     @Test
     public void delete() {
+        HttpEntity<BookDto> requestEntity = httpEntity(jwtHeaders(findManagerUser()),createBookDefault());
         String resourceUrl =
-                basicAuthTemplate(findManagerUser()).
-                        postForEntity("/api/books", createBookDefault(), BookDto.class)
-                        .getBody()
-                        .getLink("self")
-                        .getHref();
+                template().
+                        postForEntity("/api/books", requestEntity, BookDto.class)
+                        .getBody().getLink("self").getHref();
 
-        basicAuthTemplate(findManagerUser()).delete(resourceUrl);
+        requestEntity = httpEntity(requestEntity.getHeaders());
+        ResponseEntity<BookDto> response =
+                template().exchange(resourceUrl,HttpMethod.DELETE,requestEntity,BookDto.class);
 
-        ResponseEntity<BookDto> response = getResource(resourceUrl, BookDto.class, findManagerUser());
         assertThat(response.getStatusCode(), is(HttpStatus.NO_CONTENT));
     }
 
     @Test
     public void rent() {
+        HttpEntity<BookDto> requestEntity = httpEntity(jwtHeaders(findManagerUser()),createBookDefault());
         String resourceUrl =
-                basicAuthTemplate(findManagerUser()).
-                        postForEntity("/api/books", createBookDefault(), BookDto.class)
-                        .getBody()
-                        .getLink("self")
-                        .getHref();
+                template().
+                        postForEntity("/api/books", requestEntity, BookDto.class)
+                        .getBody().getLink("self").getHref();
 
-        basicAuthTemplate(findByUserId("lsc109")).put(resourceUrl + "/rent", null);
-        ResponseEntity<BookDto> updatedBook = getResource(resourceUrl, BookDto.class, findManagerUser());
-        assertFalse(updatedBook.getBody().getRentable());
+        requestEntity = httpEntity(jwtHeaders(findNormalUser()));
+
+        ResponseEntity<BookDto> response =
+                template().exchange(resourceUrl+"/rent",HttpMethod.PUT,requestEntity,BookDto.class);
+        assertFalse(response.getBody().getRentable());
     }
 
     @Test
     public void giveBack() {
+        HttpEntity<BookDto> requestEntity = httpEntity(jwtHeaders(findManagerUser()),createBookDefault());
         String resourceUrl =
-                basicAuthTemplate(findManagerUser()).
-                        postForEntity("/api/books", createBookDefault(), BookDto.class)
-                        .getBody()
-                        .getLink("self")
-                        .getHref();
+                template().
+                        postForEntity("/api/books", requestEntity, BookDto.class)
+                        .getBody().getLink("self").getHref();
 
-        basicAuthTemplate(findByUserId("lsc109")).put(resourceUrl + "/giveBack", null);
-        ResponseEntity<BookDto> updatedBook = getResource(resourceUrl, BookDto.class, findManagerUser());
-        assertTrue(updatedBook.getBody().getRentable());
+        requestEntity = httpEntity(jwtHeaders(findNormalUser()));
+        template().exchange(resourceUrl+"/rent",HttpMethod.PUT,requestEntity,BookDto.class);
+
+        ResponseEntity<BookDto> response =
+                template().exchange(resourceUrl+"/giveBack",HttpMethod.PUT,requestEntity,BookDto.class);
+        assertTrue(response.getBody().getRentable());
     }
 
 
