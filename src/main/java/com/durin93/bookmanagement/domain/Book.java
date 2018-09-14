@@ -17,69 +17,77 @@ public class Book extends AbstractEntity {
 
     @Lob
     @Column(nullable = false)
-    private String content;
+    private String author;
 
     @ManyToOne
-    @JoinColumn(name = "render_id")
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_book_rendor"))
     private User render;
 
     @Column(nullable = false)
-    private Boolean rentable = true;
+    private Boolean isDeleted = false;
 
     public Book() {
 
     }
 
-    public Book(String title, String content) {
+    public Book(String title, String author) {
         this.title = title;
-        this.content = content;
+        this.author = author;
     }
 
-
-    public String getContent() {
-        return content;
+    public BookDto toBookDto() {
+        return new BookDto(getId(), title, author, isRentable());
     }
 
     public String getTitle() {
         return title;
     }
 
+    public String getAuthor() {
+        return author;
+    }
+
     public User getRender() {
         return render;
     }
 
-    public Boolean getRentable() {
-        return rentable;
+    public Boolean getDeleted() {
+        return isDeleted;
     }
-
-
-    public BookDto toBookDto() {
-        return new BookDto(getId(), title, content, rentable);
-    }
-
 
     public Book update(BookDto bookDto) {
         title = Optional.ofNullable(bookDto.getTitle()).orElse(title);
-        content = Optional.ofNullable(bookDto.getContent()).orElse(content);
+        author = Optional.ofNullable(bookDto.getAuthor()).orElse(author);
         return this;
     }
 
     public void rent(User loginUser) throws CannotProceedException {
-        if (!rentable) {
+        if (!isRentable()) {
             throw new CannotProceedException("이미 대여중인 도서입니다.");
         }
-        this.rentable = false;
         this.render = loginUser;
+        render.rentBook(this);
     }
 
-    public void giveBack(User loginUser) throws CannotProceedException {
-        if (rentable) {
+    public Boolean isRentable() {
+        return render == null;
+    }
+
+
+    public void giveBack() throws CannotProceedException {
+        if (isRentable()) {
             throw new CannotProceedException("이미 반납된 도서입니다.");
         }
-        this.rentable = true;
         this.render = null;
+        render.giveBackBook(this);
     }
 
+    public void delete() throws CannotProceedException {
+        if(!isRentable()){
+            throw new CannotProceedException("대여 중인 도서입니다.");
+        }
+        isDeleted = true;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -89,17 +97,17 @@ public class Book extends AbstractEntity {
         Book book = (Book) o;
 
         if (title != null ? !title.equals(book.title) : book.title != null) return false;
-        if (content != null ? !content.equals(book.content) : book.content != null) return false;
+        if (author != null ? !author.equals(book.author) : book.author != null) return false;
         if (render != null ? !render.equals(book.render) : book.render != null) return false;
-        return rentable != null ? rentable.equals(book.rentable) : book.rentable == null;
+        return isDeleted != null ? isDeleted.equals(book.isDeleted) : book.isDeleted == null;
     }
 
     @Override
     public int hashCode() {
         int result = title != null ? title.hashCode() : 0;
-        result = 31 * result + (content != null ? content.hashCode() : 0);
+        result = 31 * result + (author != null ? author.hashCode() : 0);
         result = 31 * result + (render != null ? render.hashCode() : 0);
-        result = 31 * result + (rentable != null ? rentable.hashCode() : 0);
+        result = 31 * result + (isDeleted != null ? isDeleted.hashCode() : 0);
         return result;
     }
 
@@ -107,11 +115,10 @@ public class Book extends AbstractEntity {
     public String toString() {
         return "Book{" +
                 "title='" + title + '\'' +
-                ", content='" + content + '\'' +
+                ", author='" + author + '\'' +
                 ", render=" + render +
-                ", rentable=" + rentable +
+                ", isDeleted=" + isDeleted +
                 '}';
     }
-
 
 }

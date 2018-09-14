@@ -12,12 +12,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private UserRepository userRepository;
-
-    @Autowired
-    private JwtService jwtService;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;

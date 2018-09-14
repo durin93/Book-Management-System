@@ -15,46 +15,52 @@ import javax.transaction.Transactional;
 @Transactional
 public class BookService {
 
-    @Autowired
     private UserRepository userRepository;
 
-    @Autowired
     private BookRepository bookRepository;
 
-    public User findByUserId(String userId) {
+    @Autowired
+    public BookService(UserRepository userRepository, BookRepository bookRepository) {
+        this.userRepository = userRepository;
+        this.bookRepository = bookRepository;
+    }
+
+    public User findUserByUserId(String userId) {
         return userRepository.findByUserId(userId).orElseThrow(NullPointerException::new);
     }
 
-    public Book findById(Long id) {
+    public Book findBookById(Long id) {
         return bookRepository.findById(id).orElseThrow(NullPointerException::new);
     }
 
     public BookDto regist(String loginUser, BookDto bookDto) {
-        findByUserId(loginUser).checkManager();
+        findUserByUserId(loginUser).checkManager();
         Book book = bookDto.toBook();
         return bookRepository.save(book).toBookDto();
     }
 
     public BookDto update(String loginUser, BookDto bookDto, Long id) {
-        findByUserId(loginUser).checkManager();
-        Book book = findById(id);
-        return bookRepository.save(book.update(bookDto)).toBookDto();
+        findUserByUserId(loginUser).checkManager();
+        Book book = findBookById(id);
+        book.update(bookDto);
+        return book.toBookDto();
     }
 
-    public void delete(String loginUser, Long id) {
-        findByUserId(loginUser).checkManager();
-        bookRepository.delete(findById(id));
+    public void delete(String loginUser, Long id) throws CannotProceedException {
+        findUserByUserId(loginUser).checkManager();
+        Book book = findBookById(id);
+        book.delete();
     }
 
     public BookDto rent(String loginUser, Long id) throws CannotProceedException {
-        Book book = bookRepository.findFirstByAndIdAndRentableIsTrue(id).orElseThrow(NullPointerException::new);
-        book.rent(findByUserId(loginUser));
+        Book book = bookRepository.findFirstByAndIdAndIsDeletedIsFalse(id).orElseThrow(NullPointerException::new);
+        book.rent(findUserByUserId(loginUser));
         return book.toBookDto();
     }
 
     public BookDto giveBack(String loginUser, Long id) throws CannotProceedException {
-        Book book = bookRepository.findFirstByAndIdAndRentableIsFalse(id).orElseThrow(NullPointerException::new);
-        book.giveBack(findByUserId(loginUser));
+        Book book = bookRepository.findFirstByAndIdAndIsDeletedIsFalse(id).orElseThrow(NullPointerException::new);
+        book.giveBack();
         return book.toBookDto();
     }
 }

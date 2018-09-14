@@ -20,12 +20,17 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 @RequestMapping("/api/users")
 public class ApiUserController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ApiUserController.class);
-
-    private UserService userService;
+    private static final Logger log = LoggerFactory.getLogger(ApiUserController.class);
 
     private JwtService jwtService;
 
+    private UserService userService;
+
+    @Autowired
+    public ApiUserController(JwtService jwtService, UserService userService) {
+        this.jwtService = jwtService;
+        this.userService = userService;
+    }
 
     @PostMapping("")
     public ResponseEntity<UserDto> regist(@RequestBody UserDto userDto) {
@@ -55,13 +60,4 @@ public class ApiUserController {
         userDto.add(linkTo(ApiUserController.class).slash(userDto.getId()).withSelfRel());
     }
 
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Autowired
-    public void setJwtService(JwtService jwtService) {
-        this.jwtService = jwtService;
-    }
 }

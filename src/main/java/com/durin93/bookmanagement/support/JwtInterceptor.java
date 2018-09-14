@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class JwtInterceptor extends HandlerInterceptorAdapter {
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtInterceptor.class);
+    private static final Logger log = LoggerFactory.getLogger(JwtInterceptor.class);
 
     private static final String HEADER_AUTH = "Authorization";
 
@@ -26,7 +26,7 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         final String token = request.getHeader(HEADER_AUTH);
-        logger.debug("token {}", token);
+        log.debug("token {}", token);
         if (token != null && jwtService.isUsable(token)) {
             return true;
         } else {

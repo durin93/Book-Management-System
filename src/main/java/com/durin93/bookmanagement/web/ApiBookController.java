@@ -18,14 +18,18 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 @RequestMapping("/api/books")
 public class ApiBookController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ApiBookController.class);
+    private static final Logger log = LoggerFactory.getLogger(ApiBookController.class);
 
+    private JwtService jwtService;
 
-    @Autowired
     private BookService bookService;
 
     @Autowired
-    private JwtService jwtService;
+    public ApiBookController(JwtService jwtService, BookService bookService) {
+        this.jwtService = jwtService;
+        this.bookService = bookService;
+    }
+
 
     @PostMapping("")
     public ResponseEntity<BookDto> regist(@RequestBody BookDto bookDto) {
@@ -42,7 +46,7 @@ public class ApiBookController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) throws CannotProceedException {
         bookService.delete(jwtService.getUserId(), id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -64,7 +68,7 @@ public class ApiBookController {
 
     @GetMapping("{id}")
     public ResponseEntity<BookDto> show(@PathVariable Long id) {
-        BookDto bookDto = bookService.findById(id).toBookDto();
+        BookDto bookDto = bookService.findBookById(id).toBookDto();
         addHateoasSelf(bookDto);
         return new ResponseEntity<>(bookDto, HttpStatus.OK);
     }

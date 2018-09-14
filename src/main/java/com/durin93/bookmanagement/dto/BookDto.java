@@ -15,11 +15,9 @@ public class BookDto{
     private String title;
 
     @Size(min = 3)
-    private String content;
+    private String author;
 
     private Boolean rentable = true;
-
-    private String userId;
 
     @JsonUnwrapped
     private SelfDescription selfDescription = new SelfDescription();
@@ -28,13 +26,13 @@ public class BookDto{
 
     }
 
-    public BookDto(String title, String content){
+    public BookDto(String title, String author){
         this.title = title;
-        this.content = content;
+        this.author = author;
     }
 
-    public BookDto(Long id, String title, String content, Boolean rentable){
-        this(title,content);
+    public BookDto(Long id, String title, String author, Boolean rentable){
+        this(title,author);
         this.id = id;
         this.rentable = rentable;
     }
@@ -63,12 +61,12 @@ public class BookDto{
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public Boolean getRentable() {
@@ -80,7 +78,7 @@ public class BookDto{
     }
 
     public Book toBook() {
-        return new Book(title, content);
+        return new Book(title, author);
     }
 
     public void add(Link link){
@@ -95,13 +93,13 @@ public class BookDto{
         BookDto bookDto = (BookDto) o;
 
         if (title != null ? !title.equals(bookDto.title) : bookDto.title != null) return false;
-        return content != null ? content.equals(bookDto.content) : bookDto.content == null;
+        return author != null ? author.equals(bookDto.author) : bookDto.author == null;
     }
 
     @Override
     public int hashCode() {
         int result = title != null ? title.hashCode() : 0;
-        result = 31 * result + (content != null ? content.hashCode() : 0);
+        result = 31 * result + (author != null ? author.hashCode() : 0);
         return result;
     }
 
@@ -110,7 +108,7 @@ public class BookDto{
         return "BookDto{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
+                ", author='" + author + '\'' +
                 ", rentable=" + rentable +
                 ", links=" + selfDescription +
                 '}';

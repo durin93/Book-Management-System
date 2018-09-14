@@ -20,7 +20,7 @@ import java.util.Map;
 @Service
 public class JwtService {
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
+    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
 
     private static final String SALT = "duBookSugar";
 
@@ -49,7 +49,7 @@ public class JwtService {
         try {
             key = SALT.getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {
-            logger.error("Making JWT Key Error ::: {}", e.getMessage());
+            log.error("Making JWT Key Error ::: {}", e.getMessage());
         }
         return key;
     }
@@ -61,7 +61,7 @@ public class JwtService {
                     .parseClaimsJws(jwt);
             return true;
         } catch (Exception e) {
-            logger.debug(e.toString() + "," + e.getMessage());
+            log.debug(e.toString() + "," + e.getMessage());
             throw new JwtAuthorizationException();
         }
     }
@@ -75,7 +75,7 @@ public class JwtService {
                     .setSigningKey(SALT.getBytes("UTF-8"))
                     .parseClaimsJws(jwt);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             throw new JwtAuthorizationException();
         }
         Map<String, Object> value = (LinkedHashMap<String, Object>) claims.getBody().get(key);

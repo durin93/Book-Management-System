@@ -6,16 +6,15 @@ import com.durin93.bookmanagement.exception.UnAuthorizationException;
 import com.durin93.bookmanagement.support.domain.AbstractEntity;
 import com.durin93.bookmanagement.support.domain.Level;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Where;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class User extends AbstractEntity {
-    public static final GuestUser GUEST_USER = new GuestUser();
 
     @Size(min = 3, max = 20)
     @Column(nullable = false, length = 20, unique = true)
@@ -25,13 +24,17 @@ public class User extends AbstractEntity {
     @Column(nullable = false, length = 20)
     private String password;
 
-
     @Size(min = 3, max = 20)
     @Column(nullable = false, length = 20)
     private String name;
 
     @Enumerated(EnumType.STRING)
     private Level level = Level.USER;
+
+    @OneToMany(mappedBy = "render")
+    @JsonIgnore
+    @Where(clause = "is_deleted = false")
+    private List<Book> rentBooks = new ArrayList<>();
 
     public User() {
 
@@ -47,6 +50,10 @@ public class User extends AbstractEntity {
         this.userId = userId;
         this.password = password;
         this.name = name;
+    }
+
+    public List<Book> getRentBooks() {
+        return rentBooks;
     }
 
     public String getUserId() {
@@ -65,11 +72,6 @@ public class User extends AbstractEntity {
         return new UserDto(getId(), userId, password, name, level);
     }
 
-    @JsonIgnore
-    public boolean isGuestUser() {
-        return false;
-    }
-
     public void matchPassword(String password) throws UnAuthenticationException {
         if (!this.password.equals(password)) {
             throw new UnAuthenticationException("비밀번호가 틀렸습니다.");
@@ -83,12 +85,16 @@ public class User extends AbstractEntity {
     }
 
 
-    private static class GuestUser extends User {
-        @Override
-        public boolean isGuestUser() {
-            return true;
-        }
+    public List<Book> rentBook(Book book) {
+        rentBooks.add(book);
+        return rentBooks;
     }
+
+    public List<Book> giveBackBook(Book book) {
+        rentBooks.remove(book);
+        return rentBooks;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -116,6 +122,7 @@ public class User extends AbstractEntity {
                 "userId='" + userId + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
+                ", level=" + level +
                 '}';
     }
 

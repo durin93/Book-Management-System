@@ -10,11 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
-
-import java.io.UnsupportedEncodingException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -25,7 +24,7 @@ public abstract class AcceptanceTest {
     private static final String NORMAL_USER = "lsc109";
 
     @Autowired
-    protected  TestRestTemplate testRestTemplate;
+    protected TestRestTemplate testRestTemplate;
 
     @Autowired
     protected WebTestClient webTestClient;
@@ -41,14 +40,6 @@ public abstract class AcceptanceTest {
         return testRestTemplate;
     }
 
-    public TestRestTemplate basicAuthTemplate() {
-        return basicAuthTemplate(findManagerUser());
-    }
-
-    public TestRestTemplate basicAuthTemplate(User loginUser){
-        return testRestTemplate.withBasicAuth(loginUser.getUserId(), loginUser.getPassword());
-    }
-
     protected User findManagerUser() {
         return findByUserId(MANAGER_USER);
     }
@@ -61,30 +52,33 @@ public abstract class AcceptanceTest {
         return userRepository.findByUserId(userId).get();
     }
 
-
-    protected <T> ResponseEntity<T> getResource(String location, Class<T> responseType, User loginUser) {
-        return basicAuthTemplate(loginUser).getForEntity(location, responseType);
+    protected <T> ResponseEntity<T> requestPUT(String resourceUrl, HttpEntity requestEntity, Class<T> responseType){
+        return template().exchange(resourceUrl,HttpMethod.PUT,requestEntity, responseType);
     }
 
-    protected <T> ResponseEntity<T> getResource(String location, Class<T> responseType) {
-        return basicAuthTemplate(findManagerUser()).getForEntity(location, responseType);
+    protected <T> ResponseEntity<T> requestDELETE(String resourceUrl, HttpEntity requestEntity, Class<T> responseType){
+        return template().exchange(resourceUrl,HttpMethod.DELETE, requestEntity, responseType);
     }
 
-    protected String createJwt(User user){
-        return jwtService.create("userInfo",user);
+    protected String createJwt(User user) {
+        return jwtService.create("userInfo", user);
     }
 
-    protected HttpHeaders jwtHeaders(User user){
+    protected HttpHeaders jwtHeaders(User user) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", createJwt(user));
         return headers;
     }
 
-    public  <T> HttpEntity<T> httpEntity(HttpHeaders headers, Object object) {
-        return new HttpEntity<>((T)object,headers);
+    protected <T> HttpEntity<T> jwtEntity(User user, Object object) {
+        return new HttpEntity<>((T) object, jwtHeaders(user));
     }
 
-    public  HttpEntity httpEntity(HttpHeaders headers) {
+    protected HttpEntity jwtEntity(User user) {
+        return new HttpEntity(jwtHeaders(user));
+    }
+
+    protected HttpEntity jwtEntity(HttpHeaders headers) {
         return new HttpEntity(headers);
     }
 

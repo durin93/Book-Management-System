@@ -15,7 +15,7 @@ import static org.junit.Assert.assertThat;
 
 public class ApiUserAcceptanceTest extends AcceptanceTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(ApiUserAcceptanceTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ApiUserAcceptanceTest.class);
 
     @Test
     public void regist() {
@@ -28,7 +28,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
         assertThat(response.getBody(), is(createUser));
 
-        logger.debug(response.getBody().toString());
+        log.debug(response.getBody().toString());
     }
 
     @Test
@@ -48,7 +48,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody().getUserId(), is("durin93"));
 
-        logger.debug(response.getBody().toString());
+        log.debug(response.getBody().toString());
     }
 
     @Test

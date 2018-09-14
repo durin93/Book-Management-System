@@ -7,8 +7,6 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.hateoas.Link;
 
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class UserDto {
