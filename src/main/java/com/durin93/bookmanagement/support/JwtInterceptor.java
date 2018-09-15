@@ -1,33 +1,30 @@
 package com.durin93.bookmanagement.support;
 
 import com.durin93.bookmanagement.exception.JwtAuthorizationException;
-import com.durin93.bookmanagement.service.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Component
 public class JwtInterceptor extends HandlerInterceptorAdapter {
 
     private static final Logger log = LoggerFactory.getLogger(JwtInterceptor.class);
 
     private static final String HEADER_AUTH = "Authorization";
 
-    private JwtService jwtService;
+    private JwtManager jwtManager;
 
-    public JwtInterceptor(JwtService jwtService) {
-        this.jwtService = jwtService;
+    public JwtInterceptor(JwtManager jwtManager) {
+        this.jwtManager = jwtManager;
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         final String token = request.getHeader(HEADER_AUTH);
         log.debug("token {}", token);
-        if (token != null && jwtService.isUsable(token)) {
+        if (token != null && jwtManager.isUsable(token)) {
             return true;
         } else {
             throw new JwtAuthorizationException();

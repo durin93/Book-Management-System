@@ -1,43 +1,36 @@
-package com.durin93.bookmanagement.service;
+package com.durin93.bookmanagement.support;
 
+import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.exception.JwtAuthorizationException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
-@Service
-public class JwtService {
+public class JwtManager {
 
-    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
+    private static final Logger log = LoggerFactory.getLogger(JwtManager.class);
 
+    private static final String ISSUER = "dubook.com";
+    private static final String CLAIM_KEY_USER_ID = "userId";
     private static final String SALT = "duBookSugar";
 
-    private int expireHour = 1;
+    private int expireHour = 3600000;
+    private int expireTime = 3 * expireHour;
 
-    private int expireTime = 1000 * 60 * 60 * expireHour;
 
-
-    public <T> String create(String key, T data) {
+    public <T> String create(User user) {
         String jwt = Jwts.builder()
                 .setHeaderParam("typ", "JWT")
                 .setHeaderParam("alg", "HS256")
-                .setIssuer("dubook.com")
-                .setSubject("authentication")
-                .setIssuedAt(new Date())
+                .setIssuer(ISSUER)
                 .setExpiration(new Date(System.currentTimeMillis() + expireTime))
-                .claim(key, data)
+                .claim(CLAIM_KEY_USER_ID, user.getUserId())
                 .signWith(SignatureAlgorithm.HS256, generateKey())
                 .compact();
         return jwt;
@@ -56,34 +49,31 @@ public class JwtService {
 
     public boolean isUsable(String jwt) {
         try {
-            Jws<Claims> claims = Jwts.parser()
-                    .setSigningKey(generateKey())
-                    .parseClaimsJws(jwt);
+            parse(jwt);
             return true;
         } catch (Exception e) {
-            log.debug(e.toString() + "," + e.getMessage());
+            log.debug(e.getMessage());
             throw new JwtAuthorizationException();
         }
     }
 
-    public Map<String, Object> get(String key) {
+    public String decode() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String jwt = request.getHeader("Authorization");
         Jws<Claims> claims = null;
         try {
-            claims = Jwts.parser()
-                    .setSigningKey(SALT.getBytes("UTF-8"))
-                    .parseClaimsJws(jwt);
+            claims = parse(jwt);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.debug(e.getMessage());
             throw new JwtAuthorizationException();
         }
-        Map<String, Object> value = (LinkedHashMap<String, Object>) claims.getBody().get(key);
-        return value;
+        return claims.getBody().get(CLAIM_KEY_USER_ID).toString();
     }
 
-    public String getUserId() {
-        return String.valueOf(get("userInfo").get("userId"));
+    private Jws<Claims> parse(String jwt){
+        return Jwts.parser()
+                .setSigningKey(generateKey())
+                .parseClaimsJws(jwt);
     }
 
 }

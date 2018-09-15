@@ -2,7 +2,7 @@ package com.durin93.bookmanagement.support.test;
 
 import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.repository.UserRepository;
-import com.durin93.bookmanagement.service.JwtService;
+import com.durin93.bookmanagement.support.JwtManager;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -33,7 +33,7 @@ public abstract class AcceptanceTest {
     private UserRepository userRepository;
 
     @Autowired
-    private JwtService jwtService;
+    private JwtManager jwtManager;
 
 
     public TestRestTemplate template() {
@@ -61,7 +61,7 @@ public abstract class AcceptanceTest {
     }
 
     protected String createJwt(User user) {
-        return jwtService.create("userInfo", user);
+        return jwtManager.create(user);
     }
 
     protected HttpHeaders jwtHeaders(User user) {

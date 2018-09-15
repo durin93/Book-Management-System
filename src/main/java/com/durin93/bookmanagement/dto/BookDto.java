@@ -19,6 +19,8 @@ public class BookDto{
 
     private Boolean rentable = true;
 
+    private Boolean isDeleted = false;
+
     @JsonUnwrapped
     private SelfDescription selfDescription = new SelfDescription();
 
@@ -35,6 +37,11 @@ public class BookDto{
         this(title,author);
         this.id = id;
         this.rentable = rentable;
+    }
+
+    public BookDto(Long id, String title, String author, Boolean rentable, Boolean isDeleted){
+        this(id,title,author,rentable);
+        this.isDeleted = isDeleted;
     }
 
     public SelfDescription getSelfDescription() {
@@ -69,6 +76,14 @@ public class BookDto{
         this.author = author;
     }
 
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
     public Boolean getRentable() {
         return rentable;
     }
@@ -81,7 +96,7 @@ public class BookDto{
         return new Book(title, author);
     }
 
-    public void add(Link link){
+    public void addLink(Link link){
         selfDescription.add(link);
     }
 
@@ -93,13 +108,17 @@ public class BookDto{
         BookDto bookDto = (BookDto) o;
 
         if (title != null ? !title.equals(bookDto.title) : bookDto.title != null) return false;
-        return author != null ? author.equals(bookDto.author) : bookDto.author == null;
+        if (author != null ? !author.equals(bookDto.author) : bookDto.author != null) return false;
+        if (rentable != null ? !rentable.equals(bookDto.rentable) : bookDto.rentable != null) return false;
+        return isDeleted != null ? isDeleted.equals(bookDto.isDeleted) : bookDto.isDeleted == null;
     }
 
     @Override
     public int hashCode() {
         int result = title != null ? title.hashCode() : 0;
         result = 31 * result + (author != null ? author.hashCode() : 0);
+        result = 31 * result + (rentable != null ? rentable.hashCode() : 0);
+        result = 31 * result + (isDeleted != null ? isDeleted.hashCode() : 0);
         return result;
     }
 
@@ -110,6 +129,7 @@ public class BookDto{
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", rentable=" + rentable +
+                ", isDeleted=" + isDeleted +
                 ", links=" + selfDescription +
                 '}';
     }

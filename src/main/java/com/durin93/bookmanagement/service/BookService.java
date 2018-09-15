@@ -5,10 +5,10 @@ import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.dto.BookDto;
 import com.durin93.bookmanagement.repository.BookRepository;
 import com.durin93.bookmanagement.repository.UserRepository;
+import com.durin93.bookmanagement.support.JwtManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.naming.CannotProceedException;
 import javax.transaction.Transactional;
 
 @Service
@@ -19,48 +19,50 @@ public class BookService {
 
     private BookRepository bookRepository;
 
+    private JwtManager jwtManager;
+
     @Autowired
-    public BookService(UserRepository userRepository, BookRepository bookRepository) {
+    public BookService(UserRepository userRepository, BookRepository bookRepository, JwtManager jwtManager) {
         this.userRepository = userRepository;
         this.bookRepository = bookRepository;
+        this.jwtManager = jwtManager;
     }
 
-    public User findUserByUserId(String userId) {
-        return userRepository.findByUserId(userId).orElseThrow(NullPointerException::new);
+    public User loginUser() {
+        return userRepository.findByUserId(jwtManager.decode()).orElseThrow(NullPointerException::new);
     }
 
     public Book findBookById(Long id) {
-        return bookRepository.findById(id).orElseThrow(NullPointerException::new);
+        return bookRepository.findByIdAndIsDeletedIsFalse(id).orElseThrow(NullPointerException::new);
     }
 
-    public BookDto regist(String loginUser, BookDto bookDto) {
-        findUserByUserId(loginUser).checkManager();
+    public BookDto regist(BookDto bookDto) {
+        loginUser().checkManager();
         Book book = bookDto.toBook();
         return bookRepository.save(book).toBookDto();
     }
 
-    public BookDto update(String loginUser, BookDto bookDto, Long id) {
-        findUserByUserId(loginUser).checkManager();
+    public BookDto update(BookDto bookDto, Long id) {
+        loginUser().checkManager();
         Book book = findBookById(id);
         book.update(bookDto);
         return book.toBookDto();
     }
 
-    public void delete(String loginUser, Long id) throws CannotProceedException {
-        findUserByUserId(loginUser).checkManager();
+    public BookDto delete(Long id) {
+        loginUser().checkManager();
         Book book = findBookById(id);
-        book.delete();
+        return book.delete().toBookDto();
     }
 
-    public BookDto rent(String loginUser, Long id) throws CannotProceedException {
-        Book book = bookRepository.findFirstByAndIdAndIsDeletedIsFalse(id).orElseThrow(NullPointerException::new);
-        book.rent(findUserByUserId(loginUser));
-        return book.toBookDto();
+    public BookDto rent(Long id) {
+        Book book = findBookById(id);
+        return book.rentBy(loginUser()).toBookDto();
     }
 
-    public BookDto giveBack(String loginUser, Long id) throws CannotProceedException {
-        Book book = bookRepository.findFirstByAndIdAndIsDeletedIsFalse(id).orElseThrow(NullPointerException::new);
-        book.giveBack();
+    public BookDto giveBack(Long id) {
+        Book book = findBookById(id);
+        book.giveBackBy();
         return book.toBookDto();
     }
 }

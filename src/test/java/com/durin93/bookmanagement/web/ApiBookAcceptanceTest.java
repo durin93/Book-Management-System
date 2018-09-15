@@ -22,10 +22,12 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
         ResponseEntity<BookDto> response =
                 template().postForEntity("/api/books", jwtEntity(findManagerUser(), createBookDto), BookDto.class);
 
+
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
         assertThat(response.getBody(), is(createBookDto));
-        assertNotNull(response.getBody().getSelfDescription());
+        assertNotNull(response.getBody().getSelfDescription().getLink("self"));
     }
+
 
     @Test
     public void regist_fail_unAuthorization() {
@@ -37,25 +39,20 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void update() {
-        String resourceUrl =
-                template().
-                        postForEntity("/api/books", jwtEntity(findManagerUser(), createBookDefault()), BookDto.class)
-                        .getBody().getLink("self").getHref();
+        String resourceUrl = createBookUrl();
 
         BookDto updateBookDto = new BookDto("내가 사랑한 유럽 TOP10", "정여울");
         ResponseEntity<BookDto> response = requestPUT(resourceUrl, jwtEntity(findManagerUser(), updateBookDto), BookDto.class);
 
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
         assertThat(response.getBody(), is(updateBookDto));
-        assertNotNull(response.getBody().getSelfDescription());
+        assertNotNull(response.getBody().getSelfDescription().getLink("self"));
     }
 
     @Test
     public void update_fail_unAuthorization() {
-        String resourceUrl =
-                template().
-                        postForEntity("/api/books", jwtEntity(findManagerUser(), createBookDefault()), BookDto.class)
-                        .getBody().getLink("self").getHref();
+        String resourceUrl = createBookUrl();
+
         BookDto updateBookDto = new BookDto("내가 사랑한 유럽 TOP10", "정여울");
 
         ResponseEntity<BookDto> response =
@@ -66,10 +63,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void delete() {
-        String resourceUrl =
-                template().
-                        postForEntity("/api/books", jwtEntity(findManagerUser(), createBookDefault()), BookDto.class)
-                        .getBody().getLink("self").getHref();
+        String resourceUrl = createBookUrl();
 
         ResponseEntity<BookDto> response = requestDELETE(resourceUrl, jwtEntity(findManagerUser()), BookDto.class);
 
@@ -78,27 +72,25 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void rent() {
-        String resourceUrl =
-                template().
-                        postForEntity("/api/books", jwtEntity(findManagerUser(), createBookDefault()), BookDto.class)
-                        .getBody().getLink("self").getHref();
+        String resourceUrl = createBookUrl();
 
         ResponseEntity<BookDto> response = requestPUT(resourceUrl + "/rent", jwtEntity(findNormalUser()), BookDto.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertFalse(response.getBody().getRentable());
+        assertNotNull(response.getBody().getSelfDescription().getLink("self"));
+
     }
 
     @Test
     public void giveBack() {
-        String resourceUrl =
-                template().
-                        postForEntity("/api/books", jwtEntity(findManagerUser(), createBookDefault()), BookDto.class)
-                        .getBody().getLink("self").getHref();
-
+        String resourceUrl = createBookUrl();
 
         requestPUT(resourceUrl + "/rent", jwtEntity(findNormalUser()), BookDto.class);
         ResponseEntity<BookDto> response = requestPUT(resourceUrl + "/giveBack", jwtEntity(findNormalUser()), BookDto.class);
-
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertTrue(response.getBody().getRentable());
+        assertNotNull(response.getBody().getSelfDescription().getLink("self"));
+
     }
 
 
@@ -106,5 +98,10 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
         return new BookDto("스페인 너는 자유다", "손미나");
     }
 
+    public String createBookUrl() {
+        return template().
+                postForEntity("/api/books", jwtEntity(findManagerUser(), createBookDefault()), BookDto.class)
+                .getBody().getLink("self").getHref();
+    }
 
 }

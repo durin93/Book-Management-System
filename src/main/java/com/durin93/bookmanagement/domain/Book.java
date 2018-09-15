@@ -1,12 +1,11 @@
 package com.durin93.bookmanagement.domain;
 
 import com.durin93.bookmanagement.dto.BookDto;
+import com.durin93.bookmanagement.exception.RentalException;
 import com.durin93.bookmanagement.support.domain.AbstractEntity;
 
-import javax.naming.CannotProceedException;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.Optional;
 
 @Entity
 public class Book extends AbstractEntity {
@@ -35,16 +34,14 @@ public class Book extends AbstractEntity {
         this.author = author;
     }
 
+    public Book(Long id, String title, String author) {
+        super(id);
+        this.title = title;
+        this.author = author;
+    }
+
     public BookDto toBookDto() {
-        return new BookDto(getId(), title, author, isRentable());
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getAuthor() {
-        return author;
+        return new BookDto(getId(), title, author, checkRender(), isDeleted);
     }
 
     public User getRender() {
@@ -56,37 +53,41 @@ public class Book extends AbstractEntity {
     }
 
     public Book update(BookDto bookDto) {
-        title = Optional.ofNullable(bookDto.getTitle()).orElse(title);
-        author = Optional.ofNullable(bookDto.getAuthor()).orElse(author);
+        checkRentable();
+        title = bookDto.getTitle();
+        author = bookDto.getAuthor();
         return this;
     }
 
-    public void rent(User loginUser) throws CannotProceedException {
-        if (!isRentable()) {
-            throw new CannotProceedException("이미 대여중인 도서입니다.");
-        }
-        this.render = loginUser;
+    public Book rentBy(User loginUser) {
+        checkRentable();
+        render = loginUser;
         render.rentBook(this);
+        return this;
     }
 
-    public Boolean isRentable() {
-        return render == null;
-    }
-
-
-    public void giveBack() throws CannotProceedException {
-        if (isRentable()) {
-            throw new CannotProceedException("이미 반납된 도서입니다.");
+    public void giveBackBy() {
+        if (checkRender()) {
+            throw new RentalException("이미 반납된 도서입니다.");
         }
-        this.render = null;
         render.giveBackBook(this);
+        render = null;
     }
 
-    public void delete() throws CannotProceedException {
-        if(!isRentable()){
-            throw new CannotProceedException("대여 중인 도서입니다.");
+    protected Boolean checkRentable() {
+        if (!checkRender()) {
+            throw new RentalException("대여중인 도서입니다.");
         }
+        return true;
+    }
+    public Book delete() {
+        checkRentable();
         isDeleted = true;
+        return this;
+    }
+
+    protected Boolean checkRender() {
+        return render == null;
     }
 
     @Override

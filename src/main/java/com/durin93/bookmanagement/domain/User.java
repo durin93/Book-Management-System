@@ -5,12 +5,9 @@ import com.durin93.bookmanagement.exception.UnAuthenticationException;
 import com.durin93.bookmanagement.exception.UnAuthorizationException;
 import com.durin93.bookmanagement.support.domain.AbstractEntity;
 import com.durin93.bookmanagement.support.domain.Level;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,70 +28,58 @@ public class User extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private Level level = Level.USER;
 
-    @OneToMany(mappedBy = "render")
-    @JsonIgnore
-    @Where(clause = "is_deleted = false")
-    private List<Book> rentBooks = new ArrayList<>();
+    @Embedded
+    private Books rentBooks = new Books();
 
     public User() {
 
     }
 
     public User(String userId, String password, String name, Level level) {
-        this(0L, userId, password, name);
+        this(userId, password, name);
         this.level = level;
     }
 
-    public User(Long id, String userId, String password, String name) {
-        super(id);
+    public User(String userId, String password, String name) {
         this.userId = userId;
         this.password = password;
         this.name = name;
     }
 
     public List<Book> getRentBooks() {
-        return rentBooks;
+        return rentBooks.getRentBooks();
     }
 
     public String getUserId() {
         return userId;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public UserDto toUserDto() {
         return new UserDto(getId(), userId, password, name, level);
     }
 
-    public void matchPassword(String password) throws UnAuthenticationException {
+    public Boolean matchPassword(String password) throws UnAuthenticationException {
         if (!this.password.equals(password)) {
             throw new UnAuthenticationException("비밀번호가 틀렸습니다.");
         }
+        return true;
     }
 
-    public void checkManager() {
+    public Boolean checkManager() {
         if (!level.isManager()) {
             throw new UnAuthorizationException("관리자만 접근 가능합니다.");
         }
+        return true;
     }
 
 
-    public List<Book> rentBook(Book book) {
-        rentBooks.add(book);
-        return rentBooks;
+    public void rentBook(Book book) {
+        rentBooks.rentBook(book);
     }
 
-    public List<Book> giveBackBook(Book book) {
-        rentBooks.remove(book);
-        return rentBooks;
+    public void giveBackBook(Book book) {
+        rentBooks.giveBackBook(book);
     }
-
 
     @Override
     public boolean equals(Object o) {
