@@ -1,7 +1,5 @@
 package com.durin93.bookmanagement.domain;
 
-import com.durin93.bookmanagement.dto.BookDto;
-import com.durin93.bookmanagement.dto.UserDto;
 import com.durin93.bookmanagement.exception.UnAuthenticationException;
 import com.durin93.bookmanagement.exception.UnAuthorizationException;
 import com.durin93.bookmanagement.support.domain.Level;
@@ -10,9 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class UserTest {

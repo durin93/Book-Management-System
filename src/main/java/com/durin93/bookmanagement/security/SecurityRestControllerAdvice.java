@@ -1,5 +1,6 @@
 package com.durin93.bookmanagement.security;
 
+import com.durin93.bookmanagement.exception.JwtAuthorizationException;
 import com.durin93.bookmanagement.exception.UnAuthenticationException;
 import com.durin93.bookmanagement.exception.UnAuthorizationException;
 import org.slf4j.Logger;
@@ -31,6 +32,12 @@ public class SecurityRestControllerAdvice {
     public ResponseEntity<Void> nullPointException(NullPointerException e) {
         log.debug("RestController NullPointerException is happened!");
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @ExceptionHandler(JwtAuthorizationException.class)
+    public ResponseEntity<Void> jwtAuthorizationException(JwtAuthorizationException e) {
+        log.debug("RestController jwtAuthorizationException is happened!");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
 

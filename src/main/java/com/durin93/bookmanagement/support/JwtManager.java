@@ -70,7 +70,7 @@ public class JwtManager {
         return claims.getBody().get(CLAIM_KEY_USER_ID).toString();
     }
 
-    private Jws<Claims> parse(String jwt){
+    public Jws<Claims> parse(String jwt){
         return Jwts.parser()
                 .setSigningKey(generateKey())
                 .parseClaimsJws(jwt);
