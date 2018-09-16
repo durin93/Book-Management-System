@@ -1,5 +1,6 @@
 package com.durin93.bookmanagement.security;
 
+import com.durin93.bookmanagement.exception.DeleteException;
 import com.durin93.bookmanagement.exception.JwtAuthorizationException;
 import com.durin93.bookmanagement.exception.UnAuthenticationException;
 import com.durin93.bookmanagement.exception.UnAuthorizationException;
@@ -31,6 +32,12 @@ public class SecurityRestControllerAdvice {
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<Void> nullPointException(NullPointerException e) {
         log.debug("RestController NullPointerException is happened!");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @ExceptionHandler(DeleteException.class)
+    public ResponseEntity<Void> dleteException(DeleteException e) {
+        log.debug("RestController DeleteException is happened!");
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

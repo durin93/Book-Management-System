@@ -1,15 +1,14 @@
 package com.durin93.bookmanagement.web;
 
 import com.durin93.bookmanagement.dto.BookDto;
+import com.durin93.bookmanagement.dto.BookDtos;
+import com.durin93.bookmanagement.dto.SearchDto;
 import com.durin93.bookmanagement.service.BookService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
@@ -21,7 +20,6 @@ public class ApiBookController {
 
     private BookService bookService;
 
-    @Autowired
     public ApiBookController(BookService bookService) {
         this.bookService = bookService;
     }
@@ -69,15 +67,21 @@ public class ApiBookController {
         return new ResponseEntity<>(bookDto, HttpStatus.OK);
     }
 
+    @GetMapping("")
+    public ResponseEntity<BookDtos> search(SearchDto searchDto) {
+        BookDtos searchBook = bookService.search(searchDto);
+        return new ResponseEntity<>(searchBook, HttpStatus.OK);
+    }
+
     @GetMapping("/mybooks")
-    public ResponseEntity<List<BookDto>> showRentBooks() {
-        List<BookDto> bookDto = bookService.findRentBooks();
-        return new ResponseEntity<>(bookDto, HttpStatus.OK);
+    public ResponseEntity<BookDtos> showRentBooks() {
+        return new ResponseEntity<>(bookService.findRentBooks(), HttpStatus.OK);
     }
 
     private void addSelfDescription(BookDto bookDto) {
         bookDto.addLink(linkTo(ApiBookController.class).slash(bookDto.getId()).withSelfRel());
     }
+
 
 
 }

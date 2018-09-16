@@ -3,6 +3,9 @@ package com.durin93.bookmanagement.service;
 import com.durin93.bookmanagement.domain.Book;
 import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.dto.BookDto;
+import com.durin93.bookmanagement.dto.BookDtos;
+import com.durin93.bookmanagement.dto.SearchDto;
+import com.durin93.bookmanagement.exception.DeleteException;
 import com.durin93.bookmanagement.repository.BookRepository;
 import com.durin93.bookmanagement.repository.UserRepository;
 import com.durin93.bookmanagement.support.JwtManager;
@@ -35,8 +38,12 @@ public class BookService {
         return userRepository.findByUserId(jwtManager.decode()).orElseThrow(NullPointerException::new);
     }
 
+    public Book findExistBookById(Long id) {
+        return bookRepository.findByIdAndIsDeletedIsFalse(id).orElseThrow(DeleteException::new);
+    }
+
     public Book findBookById(Long id) {
-        return bookRepository.findByIdAndIsDeletedIsFalse(id).orElseThrow(NullPointerException::new);
+        return bookRepository.findById(id).orElseThrow(DeleteException::new);
     }
 
     public BookDto regist(BookDto bookDto) {
@@ -47,33 +54,41 @@ public class BookService {
 
     public BookDto update(BookDto bookDto, Long id) {
         loginUser().checkManager();
-        Book book = findBookById(id);
+        Book book = findExistBookById(id);
         book.update(bookDto);
         return book.toBookDto();
     }
 
     public BookDto delete(Long id) {
         loginUser().checkManager();
-        Book book = findBookById(id);
+        Book book = findExistBookById(id);
         return book.delete().toBookDto();
     }
 
     public BookDto rent(Long id) {
-        Book book = findBookById(id);
+        Book book = findExistBookById(id);
         return book.rentBy(loginUser()).toBookDto();
     }
 
     public BookDto giveBack(Long id) {
-        Book book = findBookById(id);
+        Book book = findExistBookById(id);
         book.giveBackBy();
         return book.toBookDto();
     }
 
-    public List<BookDto> findRentBooks() {
-        List<BookDto> bookDtos = new ArrayList<>();
-        for (Book book:bookRepository.findAllByRender(loginUser())) {
-            bookDtos.add(book.toBookDto());
-        }
-        return bookDtos;
+    public BookDtos findRentBooks() {
+        return BookDtos.of(bookRepository.findAllByRender(loginUser()));
     }
+
+    public BookDtos search(SearchDto searchDto) {
+        String content = searchDto.getContent();
+        if(searchDto.isLabelTitle()) {
+            return BookDtos.of(bookRepository.findAllByTitleLike("%"+content+"%"));
+        }
+        if(searchDto.isLabelAuthor()) {
+            return BookDtos.of(bookRepository.findAllByAuthorLike("%"+content+"%"));
+        }
+        return BookDtos.of(bookRepository.findAllBooks(content));
+    }
+
 }

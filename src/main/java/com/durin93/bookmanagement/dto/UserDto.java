@@ -100,7 +100,7 @@ public class UserDto {
     }
 
 
-    public void add(Link link) {
+    public void addLink(Link link) {
         selfDescription.add(link);
     }
 

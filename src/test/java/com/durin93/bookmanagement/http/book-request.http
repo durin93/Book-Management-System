@@ -4,6 +4,7 @@
 # * 'gtrp' and 'gtr' create a GET request with or without query parameters;
 # * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
 # * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
+
 ###regist-request
 POST http://localhost:8080/api/books
 Content-Type: application/json
@@ -34,5 +35,13 @@ Authorization:
 ###mybooks-request
 GET http://localhost:8080/api/books/mybooks
 Authorization:
-###
 
+###show-request
+GET http://localhost:8080/api/books/1
+Authorization:
+
+###search-request
+GET http://localhost:8080/api/books?label=title&content=스페인
+Authorization:
+
+###

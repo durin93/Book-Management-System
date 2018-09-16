@@ -18,7 +18,7 @@ Content-Type: application/json
 POST http://localhost:8080/api/users/authentication
 Content-Type: application/json
 
-{"userId": "httptester", "password" : "1234"}
+{"userId": "durin93", "password" : "1234"}
 
 ###
 

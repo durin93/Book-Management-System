@@ -1,8 +1,6 @@
 package com.durin93.bookmanagement.web;
 
-import com.durin93.bookmanagement.domain.Book;
 import com.durin93.bookmanagement.domain.User;
-import com.durin93.bookmanagement.dto.BookDto;
 import com.durin93.bookmanagement.dto.UserDto;
 import com.durin93.bookmanagement.service.UserService;
 import com.durin93.bookmanagement.support.JwtManager;
@@ -61,8 +59,8 @@ public class ApiUserController {
     }
 
     private void addSelfDescription(UserDto userDto) {
-        userDto.add(linkTo(ApiUserController.class).slash(userDto.getId()).withSelfRel());
-        userDto.add(linkTo(methodOn(ApiBookController.class).showRentBooks()).withRel("rentbooks"));
+        userDto.addLink(linkTo(ApiUserController.class).slash(userDto.getId()).withSelfRel());
+        userDto.addLink(linkTo(methodOn(ApiBookController.class).showRentBooks()).withRel("rentbooks"));
     }
 
 }
