@@ -15,7 +15,7 @@ Content-Type: application/json
 
 
 ###login-request
-POST http://localhost:8080/api/users/login
+POST http://localhost:8080/api/users/authentication
 Content-Type: application/json
 
 {"userId": "durin93", "password" : "1234"}

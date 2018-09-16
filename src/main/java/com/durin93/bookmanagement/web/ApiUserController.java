@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
-import java.util.List;
-
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -44,7 +42,7 @@ public class ApiUserController {
     }
 
 
-    @PostMapping("login")
+    @PostMapping("authentication")
     public ResponseEntity<UserDto> login(@RequestBody UserDto userDto, HttpServletResponse response){
         User loginUser = userService.login(userDto);
         String token = jwtManager.create(loginUser);

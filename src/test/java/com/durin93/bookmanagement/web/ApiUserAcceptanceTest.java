@@ -42,7 +42,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         UserDto loginUser = new UserDto("durin93", "1234");
 
         ResponseEntity<UserDto> response =
-                template().postForEntity("/api/users/login", loginUser, UserDto.class);
+                template().postForEntity("/api/users/authentication", loginUser, UserDto.class);
 
         assertNotNull(response.getBody().getSelfDescription());
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -54,7 +54,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
     @Test
     public void login_fail_unAuthentication() {
         ResponseEntity<UserDto> response =
-                template().postForEntity("/api/users/login", new UserDto("durin93", "12345"), UserDto.class);
+                template().postForEntity("/api/users/authentication", new UserDto("durin93", "12345"), UserDto.class);
         assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
 
