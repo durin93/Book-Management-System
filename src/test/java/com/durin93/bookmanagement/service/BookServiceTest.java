@@ -3,6 +3,8 @@ package com.durin93.bookmanagement.service;
 import com.durin93.bookmanagement.domain.Book;
 import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.dto.BookDto;
+import com.durin93.bookmanagement.dto.BookDtos;
+import com.durin93.bookmanagement.dto.SearchDto;
 import com.durin93.bookmanagement.exception.RentalException;
 import com.durin93.bookmanagement.exception.UnAuthorizationException;
 import com.durin93.bookmanagement.repository.BookRepository;
@@ -18,10 +20,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -86,6 +91,8 @@ public class BookServiceTest {
         when(bookRepository.findByIdAndIsDeletedIsFalse(anyLong())).thenReturn(Optional.of(book));
         BookDto updatedBook = bookService.update(createBook(), book.getId());
         assertThat(updatedBook, is(createBook()));
+        verify(bookRepository, times((1))).findByIdAndIsDeletedIsFalse(any());
+
     }
 
     @Test
@@ -105,6 +112,8 @@ public class BookServiceTest {
         when(bookRepository.findByIdAndIsDeletedIsFalse(anyLong())).thenReturn(Optional.of(book));
         BookDto deletedBook = bookService.delete( book.getId());
         assertThat(deletedBook.getDeleted(), is(true));
+        verify(bookRepository, times((1))).findByIdAndIsDeletedIsFalse(any());
+
     }
 
     @Test
@@ -124,6 +133,7 @@ public class BookServiceTest {
         when(bookRepository.findByIdAndIsDeletedIsFalse(anyLong())).thenReturn(Optional.of(book));
         BookDto rentBook = bookService.rent( book.getId());
         assertThat(rentBook, is(book.toBookDto()));
+        verify(bookRepository, times((1))).findByIdAndIsDeletedIsFalse(any());
     }
 
     @Test
@@ -144,6 +154,7 @@ public class BookServiceTest {
         when(bookRepository.findByIdAndIsDeletedIsFalse(anyLong())).thenReturn(Optional.of(book.rentBy(user)));
         BookDto giveBackBook = bookService.giveBack( book.getId());
         assertThat(giveBackBook.getRentable(), is(true));
+        verify(bookRepository, times((1))).findByIdAndIsDeletedIsFalse(any());
     }
 
     @Test
@@ -155,6 +166,39 @@ public class BookServiceTest {
         thrown.expectMessage("이미 반납된 도서입니다.");
         bookService.giveBack( book.getId());
         fail();
+    }
+
+    @Test
+    public void findRentBooks() {
+        mockWhenLoginManager();
+
+        BookDtos bookDtos;
+
+        List<Book> bookList = new ArrayList<>();
+        bookList.add(book);
+
+        when(bookRepository.findAllByRender(any())).thenReturn(bookList);
+        bookDtos = bookService.findRentBooks();
+        assertTrue(bookDtos.hasBook(book.toBookDto()));
+        verify(bookRepository, times((1))).findAllByRender(any());
+    }
+
+    @Test
+    public void search() {
+        mockWhenLoginManager();
+
+        BookDtos bookDtos;
+
+        List<Book> bookList = new ArrayList<>();
+        bookList.add(book);
+
+        when(bookRepository.findAllByTitleLike(any())).thenReturn(bookList);
+        bookDtos = bookService.search(new SearchDto("title","기본"));
+        assertTrue(bookDtos.hasBook(book.toBookDto()));
+        verify(bookRepository, times((1))).findAllByTitleLike(any());
+        verify(bookRepository, times((0))).findAllByAuthorLike(any());
+        verify(bookRepository, times((0))).findAllBooks(any());
+
     }
 
 
