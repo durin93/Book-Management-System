@@ -3,6 +3,7 @@ package com.durin93.bookmanagement.dto;
 import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.support.domain.Level;
 import com.durin93.bookmanagement.support.domain.SelfDescription;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.hateoas.Link;
 
@@ -11,6 +12,7 @@ import javax.validation.constraints.Size;
 
 public class UserDto {
 
+    @JsonIgnore
     private Long id;
 
     @Size(min = 3, max = 20)
@@ -50,6 +52,7 @@ public class UserDto {
         this.level = level;
     }
 
+    
     public Long getId() {
         return id;
     }
@@ -125,7 +128,7 @@ public class UserDto {
     @Override
     public String toString() {
         return "UserDto{" +
-                "id=" + id +
+                "id='" + id + '\''+
                 ", userId='" + userId + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +

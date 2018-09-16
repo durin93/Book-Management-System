@@ -1,6 +1,8 @@
 package com.durin93.bookmanagement.web;
 
+import com.durin93.bookmanagement.domain.Book;
 import com.durin93.bookmanagement.domain.User;
+import com.durin93.bookmanagement.dto.BookDto;
 import com.durin93.bookmanagement.dto.UserDto;
 import com.durin93.bookmanagement.service.UserService;
 import com.durin93.bookmanagement.support.JwtManager;
@@ -13,7 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.List;
+
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/users")
@@ -44,7 +49,9 @@ public class ApiUserController {
         User loginUser = userService.login(userDto);
         String token = jwtManager.create(loginUser);
         response.setHeader("Authorization", token);
-        return new ResponseEntity<>(loginUser.toUserDto(), HttpStatus.OK);
+        UserDto loginedUser = loginUser.toUserDto();
+        addSelfDescription(loginedUser);
+        return new ResponseEntity<>(loginedUser, HttpStatus.OK);
     }
 
 
@@ -57,6 +64,7 @@ public class ApiUserController {
 
     private void addSelfDescription(UserDto userDto) {
         userDto.add(linkTo(ApiUserController.class).slash(userDto.getId()).withSelfRel());
+        userDto.add(linkTo(methodOn(ApiBookController.class).showRentBooks()).withRel("rentbooks"));
     }
 
 }

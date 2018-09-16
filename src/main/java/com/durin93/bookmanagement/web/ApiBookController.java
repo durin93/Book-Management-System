@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @RestController
@@ -36,7 +38,7 @@ public class ApiBookController {
     public ResponseEntity<BookDto> update(@PathVariable Long id, @RequestBody BookDto bookDto) {
         BookDto registedBook = bookService.update(bookDto, id);
         addSelfDescription(registedBook);
-        return new ResponseEntity<>(registedBook, HttpStatus.CREATED);
+        return new ResponseEntity<>(registedBook, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
@@ -67,8 +69,15 @@ public class ApiBookController {
         return new ResponseEntity<>(bookDto, HttpStatus.OK);
     }
 
+    @GetMapping("/mybooks")
+    public ResponseEntity<List<BookDto>> showRentBooks() {
+        List<BookDto> bookDto = bookService.findAllBook();
+        return new ResponseEntity<>(bookDto, HttpStatus.OK);
+    }
+
     private void addSelfDescription(BookDto bookDto) {
         bookDto.addLink(linkTo(ApiBookController.class).slash(bookDto.getId()).withSelfRel());
     }
+
 
 }

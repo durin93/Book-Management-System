@@ -14,7 +14,7 @@ public class Book extends AbstractEntity {
     @Column(nullable = false)
     private String title;
 
-    @Lob
+    @Size(min = 2, max = 10)
     @Column(nullable = false)
     private String author;
 

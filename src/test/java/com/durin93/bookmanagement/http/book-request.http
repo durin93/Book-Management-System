@@ -1,0 +1,39 @@
+# For a quick start check out our HTTP Requests collection (Tools|HTTP Client|Open HTTP Requests Collection).
+#
+# Following HTTP Request Live Templates are available:
+# * 'gtrp' and 'gtr' create a GET request with or without query parameters;
+# * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
+# * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
+###regist-request
+POST http://localhost:8080/api/books
+Content-Type: application/json
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkdWJvb2suY29tIiwiZXhwIjoxNTM3MDg3MDYxLCJ1c2VySWQiOiJkdXJpbjkzIn0.T6nB268BDjpxdJKnXqa6013hItNiYbhLoszmK2h4YLg
+
+{"title": "스페인 너는 자유다", "author" : "손미나"}
+
+###update-request
+PUT http://localhost:8080/api/books/1
+Content-Type: application/json
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkdWJvb2suY29tIiwiZXhwIjoxNTM3MDg3MDYxLCJ1c2VySWQiOiJkdXJpbjkzIn0.T6nB268BDjpxdJKnXqa6013hItNiYbhLoszmK2h4YLg
+
+{"title": "어린왕자 이야기", "author" : "어린왕"}
+
+###delete-request
+DELETE http://localhost:8080/api/books/1
+Content-Type: application/json
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkdWJvb2suY29tIiwiZXhwIjoxNTM3MDg3MDYxLCJ1c2VySWQiOiJkdXJpbjkzIn0.T6nB268BDjpxdJKnXqa6013hItNiYbhLoszmK2h4YLg
+
+###rent-request
+PUT http://localhost:8080/api/books/1/rent
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkdWJvb2suY29tIiwiZXhwIjoxNTM3MDg3MDYxLCJ1c2VySWQiOiJkdXJpbjkzIn0.T6nB268BDjpxdJKnXqa6013hItNiYbhLoszmK2h4YLg
+
+###giveback-request
+PUT http://localhost:8080/api/books/1/giveBack
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkdWJvb2suY29tIiwiZXhwIjoxNTM3MDg3MDYxLCJ1c2VySWQiOiJkdXJpbjkzIn0.T6nB268BDjpxdJKnXqa6013hItNiYbhLoszmK2h4YLg
+
+###mybooks-request
+GET http://localhost:8080/api/books/mybooks
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkdWJvb2suY29tIiwiZXhwIjoxNTM3MDg3MDYxLCJ1c2VySWQiOiJkdXJpbjkzIn0.T6nB268BDjpxdJKnXqa6013hItNiYbhLoszmK2h4YLg
+
+###
+

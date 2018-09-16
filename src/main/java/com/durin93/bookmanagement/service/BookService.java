@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 @Transactional
@@ -64,5 +67,17 @@ public class BookService {
         Book book = findBookById(id);
         book.giveBackBy();
         return book.toBookDto();
+    }
+
+    public List<BookDto> findAllBook() {
+        List<Book> books = bookRepository.findAllByRender(loginUser());
+
+        List<BookDto> bookDtos = new ArrayList<>();
+
+        for (Book book:books) {
+            bookDtos.add(book.toBookDto());
+        }
+        
+        return bookDtos;
     }
 }

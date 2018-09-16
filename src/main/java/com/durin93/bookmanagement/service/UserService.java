@@ -1,6 +1,7 @@
 package com.durin93.bookmanagement.service;
 
 import com.durin93.bookmanagement.domain.User;
+import com.durin93.bookmanagement.dto.BookDto;
 import com.durin93.bookmanagement.dto.UserDto;
 import com.durin93.bookmanagement.exception.UnAuthenticationException;
 import com.durin93.bookmanagement.repository.UserRepository;

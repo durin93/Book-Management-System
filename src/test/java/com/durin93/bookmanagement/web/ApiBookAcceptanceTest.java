@@ -44,7 +44,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
         BookDto updateBookDto = new BookDto("내가 사랑한 유럽 TOP10", "정여울");
         ResponseEntity<BookDto> response = requestPUT(resourceUrl, jwtEntity(findManagerUser(), updateBookDto), BookDto.class);
 
-        assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody(), is(updateBookDto));
         assertNotNull(response.getBody().getSelfDescription().getLink("self"));
     }
