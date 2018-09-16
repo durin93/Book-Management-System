@@ -28,12 +28,13 @@ public class JwtManagerTest {
     }
 
     @Test
-    public void create(){
-
+    public void create() {
         String jwt = jwtManager.create(user);
-
         Jws<Claims> claims = jwtManager.parse(jwt);
         assertTrue(jwtManager.isUsable(jwt));
+        assertThat(claims.getHeader().getType(), is("JWT"));
+        assertThat(claims.getHeader().getAlgorithm(), is("HS256"));
+        assertThat(claims.getBody().get("iss"), is("dubook.com"));
         assertThat(claims.getBody().get("userId"), is("user"));
     }
 

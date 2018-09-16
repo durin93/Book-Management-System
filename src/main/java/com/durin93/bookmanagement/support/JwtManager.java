@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
+import static io.jsonwebtoken.SignatureAlgorithm.HS256;
+
 public class JwtManager {
 
     private static final Logger log = LoggerFactory.getLogger(JwtManager.class);
@@ -27,7 +29,7 @@ public class JwtManager {
     public <T> String create(User user) {
         String jwt = Jwts.builder()
                 .setHeaderParam("typ", "JWT")
-                .setHeaderParam("alg", "HS256")
+                .setHeaderParam("alg", HS256)
                 .setIssuer(ISSUER)
                 .setExpiration(new Date(System.currentTimeMillis() + expireTime))
                 .claim(CLAIM_KEY_USER_ID, user.getUserId())
