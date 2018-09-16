@@ -69,15 +69,11 @@ public class BookService {
         return book.toBookDto();
     }
 
-    public List<BookDto> findAllBook() {
-        List<Book> books = bookRepository.findAllByRender(loginUser());
-
+    public List<BookDto> findRentBooks() {
         List<BookDto> bookDtos = new ArrayList<>();
-
-        for (Book book:books) {
+        for (Book book:bookRepository.findAllByRender(loginUser())) {
             bookDtos.add(book.toBookDto());
         }
-        
         return bookDtos;
     }
 }

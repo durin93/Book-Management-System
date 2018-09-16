@@ -71,7 +71,7 @@ public class ApiBookController {
 
     @GetMapping("/mybooks")
     public ResponseEntity<List<BookDto>> showRentBooks() {
-        List<BookDto> bookDto = bookService.findAllBook();
+        List<BookDto> bookDto = bookService.findRentBooks();
         return new ResponseEntity<>(bookDto, HttpStatus.OK);
     }
 
