@@ -41,13 +41,9 @@ public class UserDto {
         this.name = name;
     }
 
-    public UserDto(Long id, String userId, String password, String name) {
+    public UserDto(Long id, String userId, String password, String name, Level level) {
         this(userId, password, name);
         this.id = id;
-    }
-
-    public UserDto(Long id, String userId, String password, String name, Level level) {
-        this(id, userId, password, name);
         this.level = level;
     }
 

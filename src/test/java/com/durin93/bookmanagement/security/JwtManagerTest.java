@@ -1,5 +1,6 @@
-package com.durin93.bookmanagement.domain;
+package com.durin93.bookmanagement.security;
 
+import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.security.JwtManager;
 import com.durin93.bookmanagement.support.domain.Level;
 import io.jsonwebtoken.Claims;
