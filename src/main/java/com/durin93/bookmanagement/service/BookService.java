@@ -20,25 +20,16 @@ import java.util.List;
 @Transactional
 public class BookService {
 
-    private UserRepository userRepository;
 
     private BookRepository bookRepository;
 
-    private JwtManager jwtManager;
+    private UserService userService;
+
 
     @Autowired
-    public BookService(UserRepository userRepository, BookRepository bookRepository, JwtManager jwtManager) {
-        this.userRepository = userRepository;
+    public BookService(BookRepository bookRepository, UserService userService) {
         this.bookRepository = bookRepository;
-        this.jwtManager = jwtManager;
-    }
-
-    public User loginUser() {
-        return userRepository.findByUserId(jwtManager.decode()).orElseThrow(() -> new NotFoundException(ErrorManager.NOT_EXIST_ID));
-    }
-
-    public User findUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorManager.NOT_EXIST_ID));
+        this.userService = userService;
     }
 
     public Book findExistBookById(Long id) {
@@ -50,7 +41,7 @@ public class BookService {
     }
 
     public List<Book> findBooksByRender(){
-        return bookRepository.findAllByRender(loginUser());
+        return bookRepository.findAllByRender(userService.loginUser());
     }
 
     public List<Book> findBooksByRender(User user){
@@ -58,27 +49,28 @@ public class BookService {
     }
 
     public BookDto regist(BookDto bookDto) {
-        loginUser().checkManager();
+        User user = userService.loginUser();
+        user.checkManager();
         Book book = bookDto.toBook();
         return bookRepository.save(book).toBookDto();
     }
 
     public BookDto update(BookDto bookDto, Long id) {
-        loginUser().checkManager();
+        User loginUser = userService.loginUser();
         Book book = findExistBookById(id);
-        book.update(bookDto);
+        book.update(loginUser,bookDto);
         return book.toBookDto();
     }
 
     public BookDto delete(Long id) {
-        loginUser().checkManager();
+        User loginUser = userService.loginUser();
         Book book = findExistBookById(id);
-        return book.delete().toBookDto();
+        return book.delete(loginUser).toBookDto();
     }
 
     public BookDto rent(Long id) {
         Book book = findExistBookById(id);
-        return book.rentBy(loginUser()).toBookDto();
+        return book.rentBy(userService.loginUser()).toBookDto();
     }
 
     public BookDto giveBack(Long id) {
@@ -92,7 +84,7 @@ public class BookService {
     }
 
     public BookDtos findRentBooks(Long id) {
-        User render = findUserById(id);
+        User render = userService.findById(id);
         return BookDtos.of(findBooksByRender(render));
     }
 

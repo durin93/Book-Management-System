@@ -43,10 +43,7 @@ public class BookServiceTest {
     BookRepository bookRepository;
 
     @Mock
-    UserRepository userRepository;
-
-    @Mock
-    JwtManager jwtManager;
+    UserService userService;
 
     @InjectMocks
     private BookService bookService;
@@ -100,9 +97,14 @@ public class BookServiceTest {
 
         thrown.expect(UnAuthorizationException.class);
         thrown.expectMessage(ErrorManager.NO_MANAGER.getMessage());
+
+        when(bookRepository.findByIdAndIsDeletedIsFalse(anyLong())).thenReturn(Optional.of(book));
+
         bookService.update(createBook(), book.getId());
         fail();
     }
+
+
 
     @Test
     public void delete() {
@@ -119,11 +121,14 @@ public class BookServiceTest {
     public void delete_noManager() {
         mockWhenLoginUser();
 
+        when(bookRepository.findByIdAndIsDeletedIsFalse(anyLong())).thenReturn(Optional.of(book));
+
         thrown.expect(UnAuthorizationException.class);
         thrown.expectMessage(ErrorManager.NO_MANAGER.getMessage());
         bookService.delete(book.getId());
         fail();
     }
+
 
     @Test
     public void rent() {
@@ -206,13 +211,11 @@ public class BookServiceTest {
     }
 
     public void mockWhenLoginManager(){
-        when(jwtManager.decode()).thenReturn("manager");
-        when(userRepository.findByUserId(anyString())).thenReturn(Optional.of(manager));
+        when(userService.loginUser()).thenReturn(manager);
     }
 
     public void mockWhenLoginUser(){
-        when(jwtManager.decode()).thenReturn("user");
-        when(userRepository.findByUserId(anyString())).thenReturn(Optional.of(user));
+        when(userService.loginUser()).thenReturn(user);
     }
 
 }

@@ -17,7 +17,6 @@ public class JwtManagerTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-
     private JwtManager jwtManager = new JwtManager();
 
     private User user;

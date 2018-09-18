@@ -4,7 +4,6 @@ import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.dto.BookDtos;
 import com.durin93.bookmanagement.dto.UserDto;
 import com.durin93.bookmanagement.security.JwtManager;
-import com.durin93.bookmanagement.service.BookService;
 import com.durin93.bookmanagement.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,13 +24,11 @@ public class ApiUserController {
 
     private UserService userService;
 
-    private BookService bookService;
 
     @Autowired
-    public ApiUserController(JwtManager jwtManager, UserService userService, BookService bookService) {
+    public ApiUserController(JwtManager jwtManager, UserService userService) {
         this.jwtManager = jwtManager;
         this.userService = userService;
-        this.bookService = bookService;
     }
 
     @PostMapping("")
@@ -46,20 +43,10 @@ public class ApiUserController {
         User loginUser = userService.login(userDto);
         String token = jwtManager.create(loginUser);
         response.setHeader("Authorization", token);
-        UserDto loginedUser = loginUser.toUserDto();
-        return new ResponseEntity<>(loginedUser, HttpStatus.OK);
+        return new ResponseEntity<>(loginUser.toUserDto(), HttpStatus.OK);
     }
 
 
-    @GetMapping("{id}")
-    public ResponseEntity<UserDto> show(@PathVariable Long id) {
-        UserDto userDto = userService.findById(id);
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
-    }
 
-    @GetMapping("{id}/books")
-    public ResponseEntity<BookDtos> showRentBooks(@PathVariable Long id) {
-        return new ResponseEntity<>(bookService.findRentBooks(id), HttpStatus.OK);
-    }
 
 }

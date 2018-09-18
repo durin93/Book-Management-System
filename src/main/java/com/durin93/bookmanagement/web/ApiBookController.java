@@ -66,4 +66,9 @@ public class ApiBookController {
         return new ResponseEntity<>(searchBook, HttpStatus.OK);
     }
 
+    @GetMapping("users/{id}")
+    public ResponseEntity<BookDtos> showRentBooks(@PathVariable Long id) {
+        return new ResponseEntity<>(bookService.findRentBooks(id), HttpStatus.OK);
+    }
+
 }

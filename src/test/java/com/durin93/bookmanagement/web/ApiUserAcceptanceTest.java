@@ -70,7 +70,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         String renderUrl = getResourceUrl(bookDto, "render");
 
         ResponseEntity<BookDtos> response =
-                requestGET(renderUrl + "/books", jwtEntity(findNormalUser()), BookDtos.class);
+                requestGET("/api/books/users/"+findNormalUser().getId(), jwtEntity(findNormalUser()), BookDtos.class);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertTrue(response.getBody().hasBook(requestGET(createBookUrl, jwtEntity(findNormalUser()), BookDto.class).getBody()));

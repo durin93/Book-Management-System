@@ -19,6 +19,8 @@ public class Book extends AbstractEntity {
     @Column(nullable = false)
     private String author;
 
+    private ItemInfo itemInfo;
+
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_book_rendor"))
     private User render;
@@ -57,7 +59,8 @@ public class Book extends AbstractEntity {
         return isDeleted;
     }
 
-    public Book update(BookDto bookDto) {
+    public Book update(User loginUser, BookDto bookDto) {
+        loginUser.checkManager();
         checkRentable();
         title = bookDto.getTitle();
         author = bookDto.getAuthor();
@@ -83,7 +86,8 @@ public class Book extends AbstractEntity {
         }
         return true;
     }
-    public Book delete() {
+    public Book delete(User loginUser) {
+        loginUser.checkManager();
         checkRentable();
         isDeleted = true;
         return this;

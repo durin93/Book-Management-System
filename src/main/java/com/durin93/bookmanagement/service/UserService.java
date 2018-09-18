@@ -5,9 +5,11 @@ import com.durin93.bookmanagement.dto.UserDto;
 import com.durin93.bookmanagement.exception.NotFoundException;
 import com.durin93.bookmanagement.exception.UnAuthenticationException;
 import com.durin93.bookmanagement.repository.UserRepository;
+import com.durin93.bookmanagement.security.JwtManager;
 import com.durin93.bookmanagement.support.domain.ErrorManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,8 +19,12 @@ public class UserService {
 
     private UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    private JwtManager jwtManager;
+
+    @Autowired
+    public UserService(UserRepository userRepository, JwtManager jwtManager) {
         this.userRepository = userRepository;
+        this.jwtManager = jwtManager;
     }
 
     public UserDto regist(UserDto userDto) {
@@ -32,6 +38,10 @@ public class UserService {
         return user;
     }
 
+    public User loginUser() {
+        return userRepository.findByUserId(jwtManager.decode()).orElseThrow(() -> new NotFoundException(ErrorManager.NOT_EXIST_ID));
+    }
+
     public void isExist(UserDto userDto) throws UnAuthenticationException {
         if (userRepository.findByUserId(userDto.getUserId()).isPresent()) {
             throw new UnAuthenticationException(ErrorManager.EXIST_ID);
@@ -39,8 +49,8 @@ public class UserService {
     }
 
 
-    public UserDto findById(long id) {
-        return userRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorManager.NOT_EXIST_ID)).toUserDto();
+    public User findById(long id) {
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorManager.NOT_EXIST_ID));
     }
 
     public User findByUserId(String userId) {

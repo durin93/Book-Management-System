@@ -65,14 +65,15 @@ public class BookTest {
 
     @Test
     public void update() {
-        book.update(createBook());
+
+        book.update(manager,createBook());
         assertThat(book.toBookDto(), is(createBook()));
     }
 
 
     @Test
     public void delete() {
-        book.delete();
+        book.delete(manager);
         assertTrue(book.getDeleted());
     }
 
