@@ -4,6 +4,7 @@ import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.dto.UserDto;
 import com.durin93.bookmanagement.exception.UnAuthenticationException;
 import com.durin93.bookmanagement.repository.UserRepository;
+import com.durin93.bookmanagement.support.domain.ErrorManager;
 import com.durin93.bookmanagement.support.domain.Level;
 import org.junit.Before;
 import org.junit.Rule;
@@ -62,7 +63,7 @@ public class UserServiceTest {
         when(userRepository.findByUserId(anyString())).thenReturn(Optional.of(user));
 
         thrown.expect(UnAuthenticationException.class);
-        thrown.expectMessage("이미 존재하는 아이디 입니다.");
+        thrown.expectMessage(ErrorManager.EXIST_ID.getMessage());
 
         userService.isExist(createUser());
         verify(userRepository, times((1))).findByUserId(any());

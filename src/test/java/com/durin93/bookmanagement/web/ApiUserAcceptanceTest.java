@@ -76,5 +76,4 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         assertTrue(response.getBody().hasBook(requestGET(createBookUrl, jwtEntity(findNormalUser()), BookDto.class).getBody()));
     }
 
-
 }

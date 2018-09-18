@@ -2,6 +2,7 @@ package com.durin93.bookmanagement.domain;
 
 import com.durin93.bookmanagement.dto.BookDto;
 import com.durin93.bookmanagement.exception.RentalException;
+import com.durin93.bookmanagement.support.domain.ErrorManager;
 import com.durin93.bookmanagement.support.domain.Level;
 import org.junit.Before;
 import org.junit.Rule;
@@ -39,7 +40,7 @@ public class BookTest {
         book.rentBy(user);
 
         thrown.expect(RentalException.class);
-        thrown.expectMessage("대여중인 도서입니다.");
+        thrown.expectMessage(ErrorManager.ALREADY_RENT.getMessage());
         book.rentBy(user);
         fail();
     }
@@ -57,7 +58,7 @@ public class BookTest {
         book.giveBackBy();
 
         thrown.expect(RentalException.class);
-        thrown.expectMessage("이미 반납된 도서입니다.");
+        thrown.expectMessage(ErrorManager.ALREADY_GIVEBACK.getMessage());
         book.giveBackBy();
         fail();
     }
@@ -75,11 +76,6 @@ public class BookTest {
         assertTrue(book.getDeleted());
     }
 
-
-    @Test
-    public void checkManager() {
-        assertTrue(manager.checkManager());
-    }
 
     public BookDto createBook() {
         return new BookDto("새로운도서", "새로운작가");

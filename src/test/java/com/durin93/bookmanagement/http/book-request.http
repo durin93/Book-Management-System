@@ -9,7 +9,6 @@
 POST http://localhost:8080/api/books
 Content-Type: application/json
 Authorization:
-
 {"title": "스페인 너는 자유다", "author" : "손미나"}
 
 ###update-request

@@ -1,10 +1,11 @@
 package com.durin93.bookmanagement.service;
 
 import com.durin93.bookmanagement.domain.User;
-import com.durin93.bookmanagement.dto.BookDto;
 import com.durin93.bookmanagement.dto.UserDto;
+import com.durin93.bookmanagement.exception.NotFoundException;
 import com.durin93.bookmanagement.exception.UnAuthenticationException;
 import com.durin93.bookmanagement.repository.UserRepository;
+import com.durin93.bookmanagement.support.domain.ErrorManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -33,17 +34,17 @@ public class UserService {
 
     public void isExist(UserDto userDto) throws UnAuthenticationException {
         if (userRepository.findByUserId(userDto.getUserId()).isPresent()) {
-            throw new UnAuthenticationException("이미 존재하는 아이디 입니다.");
+            throw new UnAuthenticationException(ErrorManager.EXIST_ID);
         }
     }
 
 
     public UserDto findById(long id) {
-        return userRepository.findById(id).orElseThrow(() -> new NullPointerException("존재하지 않는 아이디입니다.")).toUserDto();
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorManager.NOT_EXIST_ID)).toUserDto();
     }
 
     public User findByUserId(String userId) {
-        return userRepository.findByUserId(userId).orElseThrow(() -> new NullPointerException("존재하지 않는 아이디입니다."));
+        return userRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException(ErrorManager.NOT_EXIST_ID));
     }
 
 }

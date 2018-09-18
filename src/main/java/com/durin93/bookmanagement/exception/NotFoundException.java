@@ -2,13 +2,13 @@ package com.durin93.bookmanagement.exception;
 
 import com.durin93.bookmanagement.support.domain.ErrorManager;
 
-public class RentalException extends RuntimeException {
+public class NotFoundException extends RuntimeException {
 
-    public RentalException(String message) {
+    public NotFoundException(String message) {
         super(message);
     }
 
-    public RentalException(ErrorManager errorManager) {
+    public NotFoundException(ErrorManager errorManager) {
         super(errorManager.getMessage());
     }
 

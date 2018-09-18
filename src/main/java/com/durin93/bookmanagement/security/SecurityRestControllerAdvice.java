@@ -33,7 +33,7 @@ public class SecurityRestControllerAdvice {
     }
 
     @ExceptionHandler(DeleteException.class)
-    public ResponseEntity<Void> dleteException(DeleteException e) {
+    public ResponseEntity<Void> deleteException(DeleteException e) {
         log.debug("RestController DeleteException is happened!" + e.getMessage());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

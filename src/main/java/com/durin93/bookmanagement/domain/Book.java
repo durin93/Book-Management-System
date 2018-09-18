@@ -3,6 +3,7 @@ package com.durin93.bookmanagement.domain;
 import com.durin93.bookmanagement.dto.BookDto;
 import com.durin93.bookmanagement.exception.RentalException;
 import com.durin93.bookmanagement.support.domain.AbstractEntity;
+import com.durin93.bookmanagement.support.domain.ErrorManager;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -24,6 +25,7 @@ public class Book extends AbstractEntity {
 
     @Column(nullable = false)
     private Boolean isDeleted = false;
+
 
     public Book() {
 
@@ -65,22 +67,19 @@ public class Book extends AbstractEntity {
     public Book rentBy(User loginUser) {
         checkRentable();
         render = loginUser;
-//        render.rentBook(this);
         return this;
     }
 
     public void giveBackBy() {
         if (checkRender()) {
-            throw new RentalException("이미 반납된 도서입니다.");
+            throw new RentalException(ErrorManager.ALREADY_GIVEBACK);
         }
-//        render.giveBackBook(this);
         render = null;
     }
 
     protected Boolean checkRentable() {
         if (!checkRender()) {
-//            throw new RentalException(CANT);
-            throw new RentalException("대여중인 도서입니다.");
+            throw new RentalException(ErrorManager.ALREADY_RENT);
         }
         return true;
     }

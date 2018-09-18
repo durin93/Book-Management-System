@@ -10,6 +10,7 @@ import com.durin93.bookmanagement.exception.UnAuthorizationException;
 import com.durin93.bookmanagement.repository.BookRepository;
 import com.durin93.bookmanagement.repository.UserRepository;
 import com.durin93.bookmanagement.security.JwtManager;
+import com.durin93.bookmanagement.support.domain.ErrorManager;
 import com.durin93.bookmanagement.support.domain.Level;
 import org.junit.Before;
 import org.junit.Rule;
@@ -77,7 +78,7 @@ public class BookServiceTest {
         mockWhenLoginUser();
 
         thrown.expect(UnAuthorizationException.class);
-        thrown.expectMessage("관리자만 접근 가능합니다.");
+        thrown.expectMessage(ErrorManager.NO_MANAGER.getMessage());
         bookService.regist(createBook());
         fail();
     }
@@ -98,7 +99,7 @@ public class BookServiceTest {
         mockWhenLoginUser();
 
         thrown.expect(UnAuthorizationException.class);
-        thrown.expectMessage("관리자만 접근 가능합니다.");
+        thrown.expectMessage(ErrorManager.NO_MANAGER.getMessage());
         bookService.update(createBook(), book.getId());
         fail();
     }
@@ -119,7 +120,7 @@ public class BookServiceTest {
         mockWhenLoginUser();
 
         thrown.expect(UnAuthorizationException.class);
-        thrown.expectMessage("관리자만 접근 가능합니다.");
+        thrown.expectMessage(ErrorManager.NO_MANAGER.getMessage());
         bookService.delete(book.getId());
         fail();
     }
@@ -140,7 +141,7 @@ public class BookServiceTest {
         when(bookRepository.findByIdAndIsDeletedIsFalse(anyLong())).thenReturn(Optional.of(book.rentBy(user)));
 
         thrown.expect(RentalException.class);
-        thrown.expectMessage("대여중인 도서입니다.");
+        thrown.expectMessage(ErrorManager.ALREADY_RENT.getMessage());
         bookService.rent(book.getId());
         fail();
     }
@@ -161,7 +162,7 @@ public class BookServiceTest {
 
         when(bookRepository.findByIdAndIsDeletedIsFalse(anyLong())).thenReturn(Optional.of(book));
         thrown.expect(RentalException.class);
-        thrown.expectMessage("이미 반납된 도서입니다.");
+        thrown.expectMessage(ErrorManager.ALREADY_GIVEBACK.getMessage());
         bookService.giveBack( book.getId());
         fail();
     }

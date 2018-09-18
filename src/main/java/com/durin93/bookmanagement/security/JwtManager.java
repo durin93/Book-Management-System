@@ -5,6 +5,7 @@ import com.durin93.bookmanagement.exception.JwtAuthorizationException;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -14,6 +15,7 @@ import java.util.Date;
 
 import static io.jsonwebtoken.SignatureAlgorithm.HS256;
 
+@Component
 public class JwtManager {
 
     private static final Logger log = LoggerFactory.getLogger(JwtManager.class);
@@ -44,7 +46,7 @@ public class JwtManager {
         try {
             key = SALT.getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {
-            log.error("Making JWT Key Error ::: {}", e.getMessage());
+            log.error("jwt generate error ::: {}", e.getMessage());
         }
         return key;
     }

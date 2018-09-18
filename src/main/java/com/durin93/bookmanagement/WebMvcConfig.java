@@ -21,30 +21,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
             "/api/users/**",
     };
 
-    @Bean
-    public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:messages");
-        messageSource.setDefaultEncoding("UTF-8");
-        messageSource.setCacheSeconds(30);
-        return messageSource;
-    }
-
-    @Bean
-    public MessageSourceAccessor messageSourceAccessor(MessageSource messageSource) {
-        return new MessageSourceAccessor(messageSource);
-    }
-
 
     @Bean
     public JwtInterceptor jwtInterceptor(){
-        return new JwtInterceptor(jwtManager());
+        return new JwtInterceptor();
     }
 
-    @Bean
-    public JwtManager jwtManager(){
-        return new JwtManager();
-    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

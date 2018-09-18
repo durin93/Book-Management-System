@@ -5,10 +5,11 @@ import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.dto.BookDto;
 import com.durin93.bookmanagement.dto.BookDtos;
 import com.durin93.bookmanagement.dto.SearchDto;
-import com.durin93.bookmanagement.exception.DeleteException;
+import com.durin93.bookmanagement.exception.NotFoundException;
 import com.durin93.bookmanagement.repository.BookRepository;
 import com.durin93.bookmanagement.repository.UserRepository;
 import com.durin93.bookmanagement.security.JwtManager;
+import com.durin93.bookmanagement.support.domain.ErrorManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,20 +34,19 @@ public class BookService {
     }
 
     public User loginUser() {
-        return userRepository.findByUserId(jwtManager.decode()).orElseThrow(NullPointerException::new);
+        return userRepository.findByUserId(jwtManager.decode()).orElseThrow(() -> new NotFoundException(ErrorManager.NOT_EXIST_ID));
     }
 
     public User findUserById(Long id) {
-        System.out.println("찾기");
-        return userRepository.findById(id).orElseThrow(NullPointerException::new);
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorManager.NOT_EXIST_ID));
     }
 
     public Book findExistBookById(Long id) {
-        return bookRepository.findByIdAndIsDeletedIsFalse(id).orElseThrow(DeleteException::new);
+        return bookRepository.findByIdAndIsDeletedIsFalse(id).orElseThrow(() -> new NotFoundException(ErrorManager.NOT_EXIST_BOOK));
     }
 
     public Book findBookById(Long id) {
-        return bookRepository.findById(id).orElseThrow(DeleteException::new);
+        return bookRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorManager.NOT_EXIST_BOOK));
     }
 
     public List<Book> findBooksByRender(){
