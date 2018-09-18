@@ -1,9 +1,7 @@
 package com.durin93.bookmanagement.domain;
 
 import com.durin93.bookmanagement.dto.BookDto;
-import com.durin93.bookmanagement.dto.UserDto;
 import com.durin93.bookmanagement.exception.RentalException;
-import com.durin93.bookmanagement.exception.UnAuthorizationException;
 import com.durin93.bookmanagement.support.domain.Level;
 import org.junit.Before;
 import org.junit.Rule;
@@ -32,9 +30,7 @@ public class BookTest {
     @Test
     public void rent() {
         book.rentBy(user);
-
         assertThat(book.getRender(), is(user));
-        assertTrue(user.getRentBooks().contains(book));
         assertFalse(book.checkRender());
     }
 
@@ -53,7 +49,6 @@ public class BookTest {
         book.rentBy(user);
         book.giveBackBy();
         assertNull(book.getRender());
-        assertFalse(user.getRentBooks().contains(book));
     }
 
     @Test
@@ -82,7 +77,7 @@ public class BookTest {
 
 
     @Test
-    public void checkManager(){
+    public void checkManager() {
         assertTrue(manager.checkManager());
     }
 

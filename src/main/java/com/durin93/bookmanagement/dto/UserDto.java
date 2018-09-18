@@ -3,11 +3,14 @@ package com.durin93.bookmanagement.dto;
 import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.support.domain.Level;
 import com.durin93.bookmanagement.support.domain.SelfDescription;
+import com.durin93.bookmanagement.web.ApiUserController;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.hateoas.Link;
 
 import javax.validation.constraints.Size;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 
 public class UserDto {
@@ -52,11 +55,9 @@ public class UserDto {
         this.level = level;
     }
 
-    
     public Long getId() {
         return id;
     }
-
 
     public String getUserId() {
         return userId;
@@ -94,16 +95,14 @@ public class UserDto {
         return selfDescription.getLink(rel);
     }
 
-
     public User toUser() {
-        return new User(this.userId, this.password, this.name, level);
+        return new User(this.userId, this.password, this.name);
     }
 
-
-    public void addLink(Link link) {
-        selfDescription.add(link);
+    public UserDto addSelfDescription() {
+        selfDescription.add(linkTo(ApiUserController.class).slash(id).withSelfRel());
+        return this;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -128,7 +127,7 @@ public class UserDto {
     @Override
     public String toString() {
         return "UserDto{" +
-                "id='" + id + '\''+
+                "id='" + id + '\'' +
                 ", userId='" + userId + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +

@@ -8,13 +8,11 @@ import com.durin93.bookmanagement.dto.SearchDto;
 import com.durin93.bookmanagement.exception.DeleteException;
 import com.durin93.bookmanagement.repository.BookRepository;
 import com.durin93.bookmanagement.repository.UserRepository;
-import com.durin93.bookmanagement.support.JwtManager;
+import com.durin93.bookmanagement.security.JwtManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -38,12 +36,25 @@ public class BookService {
         return userRepository.findByUserId(jwtManager.decode()).orElseThrow(NullPointerException::new);
     }
 
+    public User findUserById(Long id) {
+        System.out.println("찾기");
+        return userRepository.findById(id).orElseThrow(NullPointerException::new);
+    }
+
     public Book findExistBookById(Long id) {
         return bookRepository.findByIdAndIsDeletedIsFalse(id).orElseThrow(DeleteException::new);
     }
 
     public Book findBookById(Long id) {
         return bookRepository.findById(id).orElseThrow(DeleteException::new);
+    }
+
+    public List<Book> findBooksByRender(){
+        return bookRepository.findAllByRender(loginUser());
+    }
+
+    public List<Book> findBooksByRender(User user){
+        return bookRepository.findAllByRender(user);
     }
 
     public BookDto regist(BookDto bookDto) {
@@ -77,7 +88,12 @@ public class BookService {
     }
 
     public BookDtos findRentBooks() {
-        return BookDtos.of(bookRepository.findAllByRender(loginUser()));
+        return BookDtos.of(findBooksByRender());
+    }
+
+    public BookDtos findRentBooks(Long id) {
+        User render = findUserById(id);
+        return BookDtos.of(findBooksByRender(render));
     }
 
     public BookDtos search(SearchDto searchDto) {

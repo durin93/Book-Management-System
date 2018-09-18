@@ -1,9 +1,6 @@
 package com.durin93.bookmanagement.security;
 
-import com.durin93.bookmanagement.exception.DeleteException;
-import com.durin93.bookmanagement.exception.JwtAuthorizationException;
-import com.durin93.bookmanagement.exception.UnAuthenticationException;
-import com.durin93.bookmanagement.exception.UnAuthorizationException;
+import com.durin93.bookmanagement.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -19,31 +16,37 @@ public class SecurityRestControllerAdvice {
 
     @ExceptionHandler(UnAuthenticationException.class)
     public ResponseEntity<Void> unAuthentication(UnAuthenticationException e) {
-        log.debug("RestController UnAuthenticationException is happened!");
+        log.debug("RestController UnAuthenticationException is happened!"+ e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @ExceptionHandler(UnAuthorizationException.class)
     public ResponseEntity<Void> unAuthorization(UnAuthorizationException e) {
-        log.debug("RestController UnAuthorizationException is happened!");
+        log.debug("RestController UnAuthorizationException is happened!" + e.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<Void> nullPointException(NullPointerException e) {
-        log.debug("RestController NullPointerException is happened!");
+        log.debug("RestController NullPointerException is happened!" + e.getMessage());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @ExceptionHandler(DeleteException.class)
     public ResponseEntity<Void> dleteException(DeleteException e) {
-        log.debug("RestController DeleteException is happened!");
+        log.debug("RestController DeleteException is happened!" + e.getMessage());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @ExceptionHandler(JwtAuthorizationException.class)
     public ResponseEntity<Void> jwtAuthorizationException(JwtAuthorizationException e) {
-        log.debug("RestController jwtAuthorizationException is happened!");
+        log.debug("RestController jwtAuthorizationException is happened!" + e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @ExceptionHandler(RentalException.class)
+    public ResponseEntity<Void> rentalException(RentalException e) {
+        log.debug("RestController rentalException is happened!" + e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 

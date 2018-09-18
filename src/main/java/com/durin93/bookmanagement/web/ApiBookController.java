@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-
 @RestController
 @RequestMapping("/api/books")
 public class ApiBookController {
@@ -28,34 +26,30 @@ public class ApiBookController {
     @PostMapping("")
     public ResponseEntity<BookDto> regist(@RequestBody BookDto bookDto) {
         BookDto registedBook = bookService.regist(bookDto);
-        addSelfDescription(registedBook);
         return new ResponseEntity<>(registedBook, HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
     public ResponseEntity<BookDto> update(@PathVariable Long id, @RequestBody BookDto bookDto) {
         BookDto registedBook = bookService.update(bookDto, id);
-        addSelfDescription(registedBook);
         return new ResponseEntity<>(registedBook, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
-        BookDto deletedBook = bookService.delete(id);
+        bookService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("{id}/rent")
     public ResponseEntity<BookDto> rent(@PathVariable Long id){
         BookDto registedBook = bookService.rent(id);
-        addSelfDescription(registedBook);
         return new ResponseEntity<>(registedBook, HttpStatus.OK);
     }
 
     @PutMapping("{id}/giveBack")
     public ResponseEntity<BookDto> giveBack(@PathVariable Long id){
         BookDto registedBook = bookService.giveBack(id);
-        addSelfDescription(registedBook);
         return new ResponseEntity<>(registedBook, HttpStatus.OK);
     }
 
@@ -63,7 +57,6 @@ public class ApiBookController {
     @GetMapping("{id}")
     public ResponseEntity<BookDto> show(@PathVariable Long id) {
         BookDto bookDto = bookService.findBookById(id).toBookDto();
-        addSelfDescription(bookDto);
         return new ResponseEntity<>(bookDto, HttpStatus.OK);
     }
 
@@ -72,16 +65,5 @@ public class ApiBookController {
         BookDtos searchBook = bookService.search(searchDto);
         return new ResponseEntity<>(searchBook, HttpStatus.OK);
     }
-
-    @GetMapping("/mybooks")
-    public ResponseEntity<BookDtos> showRentBooks() {
-        return new ResponseEntity<>(bookService.findRentBooks(), HttpStatus.OK);
-    }
-
-    private void addSelfDescription(BookDto bookDto) {
-        bookDto.addLink(linkTo(ApiBookController.class).slash(bookDto.getId()).withSelfRel());
-    }
-
-
 
 }

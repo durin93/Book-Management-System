@@ -1,8 +1,9 @@
 package com.durin93.bookmanagement.support.test;
 
 import com.durin93.bookmanagement.domain.User;
+import com.durin93.bookmanagement.dto.BookDto;
 import com.durin93.bookmanagement.repository.UserRepository;
-import com.durin93.bookmanagement.support.JwtManager;
+import com.durin93.bookmanagement.security.JwtManager;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -14,7 +15,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureWebTestClient
 public abstract class AcceptanceTest {
 
     private static final String MANAGER_USER = "durin93";
@@ -22,9 +22,6 @@ public abstract class AcceptanceTest {
 
     @Autowired
     protected TestRestTemplate testRestTemplate;
-
-    @Autowired
-    protected WebTestClient webTestClient;
 
     @Autowired
     private UserRepository userRepository;
@@ -89,6 +86,26 @@ public abstract class AcceptanceTest {
 
     protected  HttpEntity jwtEntityForm(User user) {
         return new HttpEntity(jwtHeadersFormType(user));
+    }
+
+
+    ///Book
+    protected String getResourceUrl(BookDto bookDto, String rel) {
+        return bookDto.getLink(rel).getHref();
+    }
+
+    protected BookDto createBookDefault() {
+        return new BookDto("스페인 너는 자유다", "손미나");
+    }
+
+    protected BookDto createBookDefault2() {
+        return new BookDto("여행의 기술", "알랭 드 보통");
+    }
+
+    protected BookDto createBook(BookDto bookDto) {
+        return template().
+                postForEntity("/api/books", jwtEntity(findManagerUser(), bookDto), BookDto.class)
+                .getBody();
     }
 
 }

@@ -9,7 +9,7 @@ import com.durin93.bookmanagement.exception.RentalException;
 import com.durin93.bookmanagement.exception.UnAuthorizationException;
 import com.durin93.bookmanagement.repository.BookRepository;
 import com.durin93.bookmanagement.repository.UserRepository;
-import com.durin93.bookmanagement.support.JwtManager;
+import com.durin93.bookmanagement.security.JwtManager;
 import com.durin93.bookmanagement.support.domain.Level;
 import org.junit.Before;
 import org.junit.Rule;
