@@ -1,13 +1,18 @@
 package com.durin93.bookmanagement.dto;
 
 import com.durin93.bookmanagement.domain.Book;
+import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.support.domain.SelfDescription;
+import com.durin93.bookmanagement.web.ApiBookController;
+import com.durin93.bookmanagement.web.ApiUserController;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.hateoas.Link;
 
 import javax.validation.constraints.Size;
 
-public class BookDto{
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+
+public class BookDto {
 
     private Long id;
 
@@ -24,40 +29,37 @@ public class BookDto{
     @JsonUnwrapped
     private SelfDescription selfDescription = new SelfDescription();
 
-    public BookDto(){
+    public BookDto() {
 
     }
 
-    public BookDto(String title, String author){
+    public BookDto(String title, String author) {
         this.title = title;
         this.author = author;
     }
 
-    public BookDto(Long id, String title, String author, Boolean rentable){
-        this(title,author);
+    public BookDto(Long id, String title, String author, Boolean rentable) {
+        this(title, author);
         this.id = id;
         this.rentable = rentable;
     }
 
-    public BookDto(Long id, String title, String author, Boolean rentable, Boolean isDeleted){
-        this(id,title,author,rentable);
+    public BookDto(Long id, String title, String author, Boolean rentable, Boolean isDeleted) {
+        this(id, title, author, rentable);
         this.isDeleted = isDeleted;
     }
+
 
     public SelfDescription getSelfDescription() {
         return selfDescription;
     }
 
-    public Link getLink(String rel){
+    public Link getLink(String rel) {
         return selfDescription.getLink(rel);
     }
 
     public void setSelfDescription(SelfDescription selfDescription) {
         this.selfDescription = selfDescription;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getTitle() {
@@ -96,9 +98,14 @@ public class BookDto{
         return new Book(title, author);
     }
 
-    public void addLink(Link link){
-        selfDescription.add(link);
+    public BookDto addSelfDescription(User render) {
+        selfDescription.add(linkTo(ApiBookController.class).slash(id).withSelfRel());
+        if (render != null) {
+            selfDescription.add(linkTo(ApiUserController.class).slash(render.getId()).withRel("render"));
+        }
+        return this;
     }
+
 
     @Override
     public boolean equals(Object o) {

@@ -39,7 +39,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void update() {
-        String resourceUrl = createBook(createBookDefault());
+        String resourceUrl = createBook(createBookDefault()).getLink("self").getHref();
 
         BookDto updateBookDto = new BookDto("내가 사랑한 유럽 TOP10", "정여울");
         ResponseEntity<BookDto> response = requestPUT(resourceUrl, jwtEntity(findManagerUser(), updateBookDto), BookDto.class);
@@ -51,7 +51,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void update_fail_unAuthorization() {
-        String resourceUrl = createBook(createBookDefault());
+        String resourceUrl = getResourceUrl(createBook(createBookDefault()),"self");
 
         BookDto updateBookDto = new BookDto("내가 사랑한 유럽 TOP10", "정여울");
 
@@ -63,7 +63,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void delete() {
-        String resourceUrl = createBook(createBookDefault());
+        String resourceUrl = getResourceUrl(createBook(createBookDefault()),"self");
 
         ResponseEntity<BookDto> response = requestDELETE(resourceUrl, jwtEntity(findManagerUser()), BookDto.class);
 
@@ -72,18 +72,24 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void rent() {
-        String resourceUrl = createBook(createBookDefault());
-
+        String resourceUrl = getResourceUrl(createBook(createBookDefault()),"self");
         ResponseEntity<BookDto> response = requestPUT(resourceUrl + "/rent", jwtEntity(findNormalUser()), BookDto.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertFalse(response.getBody().getRentable());
         assertNotNull(response.getBody().getSelfDescription().getLink("self"));
+    }
 
+    @Test
+    public void rent_alreadyRent() {
+        String resourceUrl = getResourceUrl(createBook(createBookDefault()),"self");
+        requestPUT(resourceUrl + "/rent", jwtEntity(findNormalUser()), BookDto.class);
+        ResponseEntity<BookDto> response = requestPUT(resourceUrl + "/rent", jwtEntity(findNormalUser()), BookDto.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
 
     @Test
     public void giveBack() {
-        String resourceUrl = createBook(createBookDefault());
+        String resourceUrl = getResourceUrl(createBook(createBookDefault()),"self");
 
         requestPUT(resourceUrl + "/rent", jwtEntity(findNormalUser()), BookDto.class);
         ResponseEntity<BookDto> response = requestPUT(resourceUrl + "/giveBack", jwtEntity(findNormalUser()), BookDto.class);
@@ -96,7 +102,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void show() {
-        String resourceUrl = createBook(createBookDefault());
+        String resourceUrl = getResourceUrl(createBook(createBookDefault()),"self");
 
         ResponseEntity<BookDto> response =
                 requestGET(resourceUrl, jwtEntity(findNormalUser()), BookDto.class);
@@ -108,23 +114,10 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    public void showRentBooks() {
-        String resourceUrl = createBook(createBookDefault());
-        requestPUT(resourceUrl + "/rent", jwtEntity(findNormalUser()), BookDto.class);
-
-        ResponseEntity<BookDtos> response =
-                requestGET("/api/books/mybooks", jwtEntity(findNormalUser()), BookDtos.class);
-
-
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertTrue(response.getBody().hasBook(requestGET(resourceUrl, jwtEntity(findNormalUser()), BookDto.class).getBody()));
-    }
-
-    @Test
     public void search_title() {
 
-        String resourceUrl = createBook(createBookDefault());
-        String resourceUrl2 = createBook(createBookDefault2());
+        String resourceUrl = getResourceUrl(createBook(createBookDefault()),"self");
+        String resourceUrl2 = getResourceUrl(createBook(createBookDefault2()),"self");
 
         BookDto createBook = requestGET(resourceUrl, jwtEntity(findNormalUser()), BookDto.class).getBody();
         BookDto createBook2 = requestGET(resourceUrl2, jwtEntity(findNormalUser()), BookDto.class).getBody();
@@ -140,8 +133,8 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
     @Test
     public void search_author() {
 
-        String resourceUrl = createBook(createBookDefault());
-        String resourceUrl2 = createBook(createBookDefault2());
+        String resourceUrl = getResourceUrl(createBook(createBookDefault()),"self");
+        String resourceUrl2 = getResourceUrl(createBook(createBookDefault2()),"self");
 
         BookDto createBook = requestGET(resourceUrl, jwtEntity(findNormalUser()), BookDto.class).getBody();
         BookDto createBook2 = requestGET(resourceUrl2, jwtEntity(findNormalUser()), BookDto.class).getBody();
@@ -157,8 +150,8 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
     @Test
     public void search_all() {
 
-        String resourceUrl = createBook(createBookDefault());
-        String resourceUrl2 = createBook(createBookDefault2());
+        String resourceUrl = getResourceUrl(createBook(createBookDefault()),"self");
+        String resourceUrl2 = getResourceUrl(createBook(createBookDefault2()),"self");
 
         BookDto createBook = requestGET(resourceUrl, jwtEntity(findNormalUser()), BookDto.class).getBody();
         BookDto createBook2 = requestGET(resourceUrl2, jwtEntity(findNormalUser()), BookDto.class).getBody();
@@ -174,8 +167,8 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
     @Test
     public void search_all2() {
 
-        String resourceUrl = createBook(createBookDefault());
-        String resourceUrl2 = createBook(createBookDefault2());
+        String resourceUrl = getResourceUrl(createBook(createBookDefault()),"self");
+        String resourceUrl2 = getResourceUrl(createBook(createBookDefault2()),"self");
 
         BookDto createBook = requestGET(resourceUrl, jwtEntity(findNormalUser()), BookDto.class).getBody();
         BookDto createBook2 = requestGET(resourceUrl2, jwtEntity(findNormalUser()), BookDto.class).getBody();
@@ -185,21 +178,6 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertFalse(response.getBody().hasBook(createBook));
         assertFalse(response.getBody().hasBook(createBook2));
-    }
-
-
-    public BookDto createBookDefault() {
-        return new BookDto("스페인 너는 자유다", "손미나");
-    }
-
-    public BookDto createBookDefault2() {
-        return new BookDto("여행의 기술", "알랭 드 보통");
-    }
-
-    public String createBook(BookDto bookDto) {
-        return template().
-                postForEntity("/api/books", jwtEntity(findManagerUser(), bookDto), BookDto.class)
-                .getBody().getLink("self").getHref();
     }
 
 }

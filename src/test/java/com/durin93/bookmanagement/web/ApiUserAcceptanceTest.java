@@ -1,5 +1,7 @@
 package com.durin93.bookmanagement.web;
 
+import com.durin93.bookmanagement.dto.BookDto;
+import com.durin93.bookmanagement.dto.BookDtos;
 import com.durin93.bookmanagement.dto.UserDto;
 import com.durin93.bookmanagement.support.test.AcceptanceTest;
 import org.junit.Test;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 
 public class ApiUserAcceptanceTest extends AcceptanceTest {
@@ -56,6 +59,21 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         ResponseEntity<UserDto> response =
                 template().postForEntity("/api/users/authentication", new UserDto("durin93", "12345"), UserDto.class);
         assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
+    }
+
+    @Test
+    public void showRentBooks() {
+        BookDto bookDto = createBook(createBookDefault());
+        String createBookUrl = getResourceUrl(bookDto, "self");
+        bookDto = requestPUT(createBookUrl + "/rent", jwtEntity(findNormalUser()), BookDto.class).getBody();
+
+        String renderUrl = getResourceUrl(bookDto, "render");
+
+        ResponseEntity<BookDtos> response =
+                requestGET(renderUrl + "/books", jwtEntity(findNormalUser()), BookDtos.class);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertTrue(response.getBody().hasBook(requestGET(createBookUrl, jwtEntity(findNormalUser()), BookDto.class).getBody()));
     }
 
 

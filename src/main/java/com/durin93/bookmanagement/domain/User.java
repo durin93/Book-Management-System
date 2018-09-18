@@ -28,9 +28,6 @@ public class User extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private Level level = Level.USER;
 
-    @Embedded
-    private Books rentBooks = new Books();
-
     public User() {
 
     }
@@ -46,16 +43,13 @@ public class User extends AbstractEntity {
         this.name = name;
     }
 
-    public List<Book> getRentBooks() {
-        return rentBooks.getRentBooks();
-    }
-
     public String getUserId() {
         return userId;
     }
 
     public UserDto toUserDto() {
-        return new UserDto(getId(), userId, password, name, level);
+        UserDto userDto = new UserDto(getId(), userId, password, name, level);
+        return userDto.addSelfDescription();
     }
 
     public Boolean matchPassword(String password) throws UnAuthenticationException {
@@ -70,15 +64,6 @@ public class User extends AbstractEntity {
             throw new UnAuthorizationException("관리자만 접근 가능합니다.");
         }
         return true;
-    }
-
-
-    public void rentBook(Book book) {
-        rentBooks.rentBook(book);
-    }
-
-    public void giveBackBook(Book book) {
-        rentBooks.giveBackBook(book);
     }
 
     @Override

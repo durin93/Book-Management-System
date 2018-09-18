@@ -1,4 +1,4 @@
-package com.durin93.bookmanagement.support;
+package com.durin93.bookmanagement.security;
 
 import com.durin93.bookmanagement.exception.JwtAuthorizationException;
 import org.slf4j.Logger;

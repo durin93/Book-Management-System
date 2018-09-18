@@ -41,8 +41,11 @@ public class Book extends AbstractEntity {
     }
 
     public BookDto toBookDto() {
-        return new BookDto(getId(), title, author, checkRender(), isDeleted);
+        BookDto bookDto = new BookDto(getId(), title, author, checkRender(), isDeleted);
+        return bookDto.addSelfDescription(render);
     }
+
+
 
     public User getRender() {
         return render;
@@ -62,7 +65,7 @@ public class Book extends AbstractEntity {
     public Book rentBy(User loginUser) {
         checkRentable();
         render = loginUser;
-        render.rentBook(this);
+//        render.rentBook(this);
         return this;
     }
 
@@ -70,12 +73,13 @@ public class Book extends AbstractEntity {
         if (checkRender()) {
             throw new RentalException("이미 반납된 도서입니다.");
         }
-        render.giveBackBook(this);
+//        render.giveBackBook(this);
         render = null;
     }
 
     protected Boolean checkRentable() {
         if (!checkRender()) {
+//            throw new RentalException(CANT);
             throw new RentalException("대여중인 도서입니다.");
         }
         return true;

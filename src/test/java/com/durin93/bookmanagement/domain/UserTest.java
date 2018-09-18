@@ -8,7 +8,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class UserTest {
@@ -52,22 +51,6 @@ public class UserTest {
         thrown.expectMessage("관리자만 접근 가능합니다.");
         user.checkManager();
     }
-
-    @Test
-    public void rentBook(){
-        user.rentBook(book);
-        assertTrue(user.getRentBooks().contains(book));
-    }
-
-    @Test
-    public void giveBack(){
-        user.rentBook(book);
-        assertTrue(user.getRentBooks().contains(book));
-        user.giveBackBook(book);
-        assertFalse(user.getRentBooks().contains(book));
-    }
-
-
 
 
 }

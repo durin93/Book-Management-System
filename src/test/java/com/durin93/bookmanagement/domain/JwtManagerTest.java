@@ -1,6 +1,6 @@
 package com.durin93.bookmanagement.domain;
 
-import com.durin93.bookmanagement.support.JwtManager;
+import com.durin93.bookmanagement.security.JwtManager;
 import com.durin93.bookmanagement.support.domain.Level;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
