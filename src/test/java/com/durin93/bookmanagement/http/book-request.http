@@ -8,8 +8,9 @@
 ###regist-request
 POST http://localhost:8080/api/books
 Content-Type: application/json
-Authorization:
-{"title": "스페인 너는 자유다", "author" : "손미나"}
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkdWJvb2suY29tIiwiZXhwIjoxNTM3MjgwNjE4LCJ1c2VySWQiOiJkdXJpbjkzIn0.mqN1uaOmZXMjO5tdXef3cilmmnyQX7dAxzLAQjrK9mY
+
+{"title": "스페인 너는 자유다", "author" : "손미나", "pageNumber" : 10, "isbn" : "1234", "releaseDate" : "124124", "weight" : 15}
 
 ###update-request
 PUT http://localhost:8080/api/books/1

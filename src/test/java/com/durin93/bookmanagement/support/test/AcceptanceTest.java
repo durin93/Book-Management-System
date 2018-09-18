@@ -11,6 +11,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDate;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class AcceptanceTest {
@@ -93,11 +95,16 @@ public abstract class AcceptanceTest {
     }
 
     protected BookDto createBookDefault() {
-        return new BookDto("스페인 너는 자유다", "손미나");
+
+        return new BookDto("스페인 너는 자유다", "손미나",LocalDate.of(2006, 7, 28),340,582);
     }
 
     protected BookDto createBookDefault2() {
-        return new BookDto("여행의 기술", "알랭 드 보통");
+        return new BookDto("여행의 기술", "알랭 드 보통",LocalDate.of(2011, 12, 10),328,470);
+    }
+
+    protected BookDto createBookDefault3() {
+        return new BookDto("내가 사랑한 유럽 TOP10", "정여울", LocalDate.of(2014,1,10),380,575);
     }
 
     protected BookDto createBook(BookDto bookDto) {

@@ -1,6 +1,7 @@
 package com.durin93.bookmanagement.dto;
 
 import com.durin93.bookmanagement.domain.Book;
+import com.durin93.bookmanagement.domain.ItemInfo;
 import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.support.domain.SelfDescription;
 import com.durin93.bookmanagement.web.ApiBookController;
@@ -9,6 +10,8 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.hateoas.Link;
 
 import javax.validation.constraints.Size;
+
+import java.time.LocalDate;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
@@ -29,23 +32,29 @@ public class BookDto {
     @JsonUnwrapped
     private SelfDescription selfDescription = new SelfDescription();
 
+    private LocalDate releaseDate;
+
+    private int pageNumber;
+
+    private int weight;
+
     public BookDto() {
 
     }
 
-    public BookDto(String title, String author) {
+
+    public BookDto(String title, String author, LocalDate releaseDate, int pageNumber, int weight) {
         this.title = title;
         this.author = author;
+        this.releaseDate = releaseDate;
+        this.pageNumber = pageNumber;
+        this.weight = weight;
     }
 
-    public BookDto(Long id, String title, String author, Boolean rentable) {
-        this(title, author);
+    public BookDto(Long id, String title, String author, Boolean rentable, Boolean isDeleted, ItemInfo itemInfo) {
+        this(title, author, itemInfo.getReleaseDate(), itemInfo.getPageNumber(), itemInfo.getWeight());
         this.id = id;
         this.rentable = rentable;
-    }
-
-    public BookDto(Long id, String title, String author, Boolean rentable, Boolean isDeleted) {
-        this(id, title, author, rentable);
         this.isDeleted = isDeleted;
     }
 
@@ -94,8 +103,33 @@ public class BookDto {
         this.rentable = rentable;
     }
 
+
+    public LocalDate getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(LocalDate releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
     public Book toBook() {
-        return new Book(title, author);
+        return new Book(title, author, new ItemInfo(releaseDate, pageNumber, weight));
     }
 
     public BookDto addSelfDescription(User render) {

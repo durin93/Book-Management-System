@@ -9,6 +9,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.time.LocalDate;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -25,7 +27,7 @@ public class BookTest {
     public void setUp() {
         manager = new User("manager", "password", "관리자테스터", Level.MANAGER);
         user = new User("user", "password", "사용자테스터", Level.USER);
-        book = new Book("기본도서", "기본작가");
+        book = new BookDto("여행의 기술", "알랭 드 보통",LocalDate.of(2011, 12, 10),328,470).toBook();
     }
 
     @Test
@@ -79,7 +81,7 @@ public class BookTest {
 
 
     public BookDto createBook() {
-        return new BookDto("새로운도서", "새로운작가");
+        return new BookDto("스페인 너는 자유다", "손미나",LocalDate.of(2006, 7, 28),340,582);
     }
 
 

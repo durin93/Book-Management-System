@@ -19,6 +19,7 @@ public class Book extends AbstractEntity {
     @Column(nullable = false)
     private String author;
 
+    @Embedded
     private ItemInfo itemInfo;
 
     @ManyToOne
@@ -33,9 +34,10 @@ public class Book extends AbstractEntity {
 
     }
 
-    public Book(String title, String author) {
+    public Book(String title, String author, ItemInfo itemInfo) {
         this.title = title;
         this.author = author;
+        this.itemInfo = itemInfo;
     }
 
     public Book(Long id, String title, String author) {
@@ -45,7 +47,7 @@ public class Book extends AbstractEntity {
     }
 
     public BookDto toBookDto() {
-        BookDto bookDto = new BookDto(getId(), title, author, checkRender(), isDeleted);
+        BookDto bookDto = new BookDto(getId(), title, author, checkRender(), isDeleted, itemInfo);
         return bookDto.addSelfDescription(render);
     }
 

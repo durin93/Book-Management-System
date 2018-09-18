@@ -35,13 +35,9 @@ public class UserDto {
     public UserDto() {
     }
 
-    public UserDto(String userId, String password) {
+    public UserDto(String userId, String password, String name) {
         this.userId = userId;
         this.password = password;
-    }
-
-    public UserDto(String userId, String password, String name) {
-        this(userId, password);
         this.name = name;
     }
 
@@ -54,6 +50,7 @@ public class UserDto {
         this(id, userId, password, name);
         this.level = level;
     }
+
 
     public Long getId() {
         return id;

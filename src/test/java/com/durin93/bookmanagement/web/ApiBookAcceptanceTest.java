@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -41,7 +43,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
     public void update() {
         String resourceUrl = createBook(createBookDefault()).getLink("self").getHref();
 
-        BookDto updateBookDto = new BookDto("내가 사랑한 유럽 TOP10", "정여울");
+        BookDto updateBookDto = createBookDefault3();
         ResponseEntity<BookDto> response = requestPUT(resourceUrl, jwtEntity(findManagerUser(), updateBookDto), BookDto.class);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -53,7 +55,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
     public void update_fail_unAuthorization() {
         String resourceUrl = getResourceUrl(createBook(createBookDefault()),"self");
 
-        BookDto updateBookDto = new BookDto("내가 사랑한 유럽 TOP10", "정여울");
+        BookDto updateBookDto = createBookDefault3();
 
         ResponseEntity<BookDto> response =
                 requestPUT(resourceUrl, jwtEntity(findNormalUser(), updateBookDto), BookDto.class);

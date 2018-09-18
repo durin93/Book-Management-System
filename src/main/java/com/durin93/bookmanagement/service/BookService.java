@@ -7,8 +7,6 @@ import com.durin93.bookmanagement.dto.BookDtos;
 import com.durin93.bookmanagement.dto.SearchDto;
 import com.durin93.bookmanagement.exception.NotFoundException;
 import com.durin93.bookmanagement.repository.BookRepository;
-import com.durin93.bookmanagement.repository.UserRepository;
-import com.durin93.bookmanagement.security.JwtManager;
 import com.durin93.bookmanagement.support.domain.ErrorManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

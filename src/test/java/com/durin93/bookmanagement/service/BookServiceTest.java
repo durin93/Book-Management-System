@@ -8,8 +8,6 @@ import com.durin93.bookmanagement.dto.SearchDto;
 import com.durin93.bookmanagement.exception.RentalException;
 import com.durin93.bookmanagement.exception.UnAuthorizationException;
 import com.durin93.bookmanagement.repository.BookRepository;
-import com.durin93.bookmanagement.repository.UserRepository;
-import com.durin93.bookmanagement.security.JwtManager;
 import com.durin93.bookmanagement.support.domain.ErrorManager;
 import com.durin93.bookmanagement.support.domain.Level;
 import org.junit.Before;
@@ -21,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +28,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -55,10 +53,9 @@ public class BookServiceTest {
 
     @Before
     public void setUp() {
-
         manager = new User("manager", "password", "관리자테스터", Level.MANAGER);
         user = new User("user", "password", "사용자테스터", Level.USER);
-        book = new Book(1L,"기본도서", "기본작가");
+        book = createBook().toBook();
     }
 
     @Test
@@ -85,7 +82,7 @@ public class BookServiceTest {
         mockWhenLoginManager();
 
         when(bookRepository.findByIdAndIsDeletedIsFalse(anyLong())).thenReturn(Optional.of(book));
-        BookDto updatedBook = bookService.update(createBook(), book.getId());
+        BookDto updatedBook = bookService.update(createBook(), 1L);
         assertThat(updatedBook, is(createBook()));
         verify(bookRepository, times((1))).findByIdAndIsDeletedIsFalse(any());
 
@@ -100,7 +97,7 @@ public class BookServiceTest {
 
         when(bookRepository.findByIdAndIsDeletedIsFalse(anyLong())).thenReturn(Optional.of(book));
 
-        bookService.update(createBook(), book.getId());
+        bookService.update(createBook(), 1L);
         fail();
     }
 
@@ -111,7 +108,7 @@ public class BookServiceTest {
         mockWhenLoginManager();
 
         when(bookRepository.findByIdAndIsDeletedIsFalse(anyLong())).thenReturn(Optional.of(book));
-        BookDto deletedBook = bookService.delete( book.getId());
+        BookDto deletedBook = bookService.delete(1L);
         assertThat(deletedBook.getDeleted(), is(true));
         verify(bookRepository, times((1))).findByIdAndIsDeletedIsFalse(any());
 
@@ -125,7 +122,7 @@ public class BookServiceTest {
 
         thrown.expect(UnAuthorizationException.class);
         thrown.expectMessage(ErrorManager.NO_MANAGER.getMessage());
-        bookService.delete(book.getId());
+        bookService.delete(1L);
         fail();
     }
 
@@ -135,7 +132,7 @@ public class BookServiceTest {
         mockWhenLoginManager();
 
         when(bookRepository.findByIdAndIsDeletedIsFalse(anyLong())).thenReturn(Optional.of(book));
-        BookDto rentBook = bookService.rent( book.getId());
+        BookDto rentBook = bookService.rent(1L);
         assertThat(rentBook, is(book.toBookDto()));
         verify(bookRepository, times((1))).findByIdAndIsDeletedIsFalse(any());
     }
@@ -147,7 +144,7 @@ public class BookServiceTest {
 
         thrown.expect(RentalException.class);
         thrown.expectMessage(ErrorManager.ALREADY_RENT.getMessage());
-        bookService.rent(book.getId());
+        bookService.rent(1L);
         fail();
     }
 
@@ -156,7 +153,7 @@ public class BookServiceTest {
         mockWhenLoginManager();
 
         when(bookRepository.findByIdAndIsDeletedIsFalse(anyLong())).thenReturn(Optional.of(book.rentBy(user)));
-        BookDto giveBackBook = bookService.giveBack( book.getId());
+        BookDto giveBackBook = bookService.giveBack( 1L);
         assertThat(giveBackBook.getRentable(), is(true));
         verify(bookRepository, times((1))).findByIdAndIsDeletedIsFalse(any());
     }
@@ -168,7 +165,7 @@ public class BookServiceTest {
         when(bookRepository.findByIdAndIsDeletedIsFalse(anyLong())).thenReturn(Optional.of(book));
         thrown.expect(RentalException.class);
         thrown.expectMessage(ErrorManager.ALREADY_GIVEBACK.getMessage());
-        bookService.giveBack( book.getId());
+        bookService.giveBack( 1L);
         fail();
     }
 
@@ -207,7 +204,7 @@ public class BookServiceTest {
 
 
     public BookDto createBook() {
-        return new BookDto("새로운도서", "새로운작가");
+        return new BookDto("스페인 너는 자유다", "손미나",LocalDate.of(2006, 7, 28),340,582);
     }
 
     public void mockWhenLoginManager(){

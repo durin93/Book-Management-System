@@ -26,7 +26,6 @@ public class UserTest {
     public void setUp() {
         manager = new User("manager", "password", "관리자테스터", Level.MANAGER);
         user = new User("user", "password", "테스터", Level.USER);
-        book = new Book("기본도서", "기본작가");
     }
 
     @Test
