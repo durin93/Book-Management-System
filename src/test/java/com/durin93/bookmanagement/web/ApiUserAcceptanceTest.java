@@ -77,5 +77,4 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
     }
 
 
-
 }
