@@ -48,6 +48,13 @@ https://github.com/durin93/Book-Management-System/wiki/Histories-API
 | GET |  /api/histories | 도서 내역 검색 queryString |
 | GET |  /api/histories/{id} | 도서 내역 조회 |
 
+## 개발 환경
+
+- OS - Windows 10
+- IDE - Intelli J
+- Language - Java 8
+- Framework - Spring boot 2.0.4
+- Database - MySQL
 
 ## 실행 하기
 
