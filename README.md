@@ -51,5 +51,5 @@ https://github.com/durin93/Book-Management-System/wiki/Histories-API
 저장소를 git clone 또는 다운로드 후 
 
 1.터미널로 mvn clean package 후 target폴더에서(cd target) java -jar bookmanagement-0.0.1-SNAPSHOT.jar 실행시킵니다.(중지 시 CTRL + C)
-또는 
+
 2.스프링부트로 프로젝트를 열고 BookmanagementApplication 을 실행시킵니다.
