@@ -31,8 +31,8 @@ public class ApiBookController {
 
     @PutMapping("{id}")
     public ResponseEntity<BookDto> update(@PathVariable Long id, @RequestBody BookDto bookDto) {
-        BookDto registedBook = bookService.update(bookDto, id);
-        return new ResponseEntity<>(registedBook, HttpStatus.OK);
+        BookDto updatedBook = bookService.update(bookDto, id);
+        return new ResponseEntity<>(updatedBook, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
@@ -43,21 +43,21 @@ public class ApiBookController {
 
     @PutMapping("{id}/rent")
     public ResponseEntity<BookDto> rent(@PathVariable Long id) {
-        BookDto registedBook = bookService.rent(id);
-        return new ResponseEntity<>(registedBook, HttpStatus.OK);
+        BookDto rentedBook = bookService.rent(id);
+        return new ResponseEntity<>(rentedBook, HttpStatus.OK);
     }
 
     @PutMapping("{id}/giveBack")
     public ResponseEntity<BookDto> giveBack(@PathVariable Long id) {
-        BookDto registedBook = bookService.giveBack(id);
-        return new ResponseEntity<>(registedBook, HttpStatus.OK);
+        BookDto giveBackedBook = bookService.giveBack(id);
+        return new ResponseEntity<>(giveBackedBook, HttpStatus.OK);
     }
 
 
     @GetMapping("{id}")
     public ResponseEntity<BookDto> show(@PathVariable Long id) {
-        BookDto bookDto = bookService.findBookById(id).toBookDto();
-        return new ResponseEntity<>(bookDto, HttpStatus.OK);
+        BookDto findBook = bookService.findBookById(id).toBookDto();
+        return new ResponseEntity<>(findBook, HttpStatus.OK);
     }
 
     @GetMapping("")
@@ -68,7 +68,8 @@ public class ApiBookController {
 
     @GetMapping("users/{id}")
     public ResponseEntity<BookDtos> showRentBooks(@PathVariable Long id) {
-        return new ResponseEntity<>(bookService.findRentBooks(id), HttpStatus.OK);
+        BookDtos rentBooks = bookService.findRentBooks(id);
+        return new ResponseEntity<>(rentBooks, HttpStatus.OK);
     }
 
 }
