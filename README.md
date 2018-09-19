@@ -4,7 +4,8 @@
 
 - Restful API ( Resource, HTTP Method, Self Description )
 - 회원 가입
-- 회원 로그인 (jwt), 
+- 회원 로그인 (jwt)
+- 회원 조회
 - 도서 등록, 수정, 삭제
 - 도서 대여, 반납
 - 도서 조회 검색
