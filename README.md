@@ -33,7 +33,7 @@ https://github.com/durin93/Book-Management-System/wiki/Books-API
 | PUT |  /api/books/{id}/rent | 도서 대여 |
 | PUT |  /api/books/{id}/giveBack | 도서 반납 |
 | GET |  /api/books/{id} | 도서 조회 |
-| GET |  /api/books | 도서 검색 |
+| GET |  /api/books | 도서 검색 queryString |
 | GET |  /api/books/users/{id} | 사용자가 대여한 도서 목록 조회 |
 
 
@@ -42,7 +42,7 @@ https://github.com/durin93/Book-Management-System/wiki/Histories-API
 
 메소드 | 경로 | 설명 | 
 |----- | ----------- | ------- | 
-| GET |  /api/histories | 도서 내역 검색 |
+| GET |  /api/histories | 도서 내역 검색 queryString |
 | GET |  /api/histories/{id} | 도서 내역 조회 |
 
 
