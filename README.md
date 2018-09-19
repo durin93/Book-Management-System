@@ -4,7 +4,7 @@
 
 - Restful API ( Resource, HTTP Method, Self Description )
 - 회원 가입
-- 회원 로그인 (jwt)
+- 회원 로그인 (jwt), 
 - 도서 등록, 수정, 삭제
 - 도서 대여, 반납
 - 도서 조회 검색
@@ -21,6 +21,7 @@ https://github.com/durin93/Book-Management-System/wiki/USERS-API
 |----- | ----------- | ------- | 
 | POST |  /api/users | 회원 등록 |
 | POST |  /api/users/authentication | 로그인 |
+| GET |  /api/users/{id} | 회원 조회 |
 
 
 ### Books API 
