@@ -2,7 +2,7 @@
 
 ## 구현 내용
 
-- Restful API ( Resource, HTTP Method, Self Description )
+- Restful API ( Resource, HTTP Method, Self Description ) 도전..
 - 회원 가입
 - JWT 기반 로그인
 - 도서 등록, 수정, 삭제
