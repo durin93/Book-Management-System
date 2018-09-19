@@ -3,13 +3,9 @@ package com.durin93.bookmanagement.security;
 import com.durin93.bookmanagement.exception.JwtAuthorizationException;
 import com.durin93.bookmanagement.support.test.MockitoTest;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 

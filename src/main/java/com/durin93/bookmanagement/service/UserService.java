@@ -17,8 +17,6 @@ import sun.security.util.Password;
 @Service
 public class UserService {
 
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
-
     private UserRepository userRepository;
 
     private JwtManager jwtManager;

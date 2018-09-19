@@ -11,9 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 public class ApiUserAcceptanceTest extends AcceptanceTest {
@@ -30,8 +28,6 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         assertNotNull(response.getBody().getLink("self"));
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
         assertThat(response.getBody(), is(createUser));
-
-        log.debug(response.getBody().toString());
     }
 
     @Test

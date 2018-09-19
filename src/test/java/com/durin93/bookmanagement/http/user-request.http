@@ -20,7 +20,10 @@ Content-Type: application/json
 
 {"userId": "durin93", "password" : "1234"}
 
+###show-request
+GET http://localhost:8080/api/users/1
+Content-Type: application/json
+
+
 ###
-
-
 
