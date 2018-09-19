@@ -8,40 +8,44 @@
 ###regist-request
 POST http://localhost:8080/api/books
 Content-Type: application/json
-Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkdWJvb2suY29tIiwiZXhwIjoxNTM3MjgwNjE4LCJ1c2VySWQiOiJkdXJpbjkzIn0.mqN1uaOmZXMjO5tdXef3cilmmnyQX7dAxzLAQjrK9mY
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkdWJvb2suY29tIiwiZXhwIjoxNTM3MzY3MzAwLCJ1c2VySWQiOiJkdXJpbjkzIn0.qxY5qVzZb0hRkCO8sj-O2LbgCEfwXHAvMw9tAGFTrWE
 
-{"title": "스페인 너는 자유다", "author" : "손미나", "pageNumber" : 10, "isbn" : "1234", "releaseDate" : "124124", "weight" : 15}
-
+{"title": "스페인 너는 자유다", "author" : "손미나", "pageNumber" : 10, "releaseDate" : "2006-07-28", "weight" : 15}
 ###update-request
 PUT http://localhost:8080/api/books/1
 Content-Type: application/json
-Authorization:
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkdWJvb2suY29tIiwiZXhwIjoxNTM3MzY3MzAwLCJ1c2VySWQiOiJkdXJpbjkzIn0.qxY5qVzZb0hRkCO8sj-O2LbgCEfwXHAvMw9tAGFTrWE
 
-{"title": "어린왕자 이야기", "author" : "어린왕"}
+{"title": "여행의 기술", "author" : "알랭 드 보통", "pageNumber" : 328, "releaseDate" : "2011-12-10", "weight" : 470}
 
 ###delete-request
 DELETE http://localhost:8080/api/books/1
 Content-Type: application/json
-Authorization:
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkdWJvb2suY29tIiwiZXhwIjoxNTM3MzY3MzAwLCJ1c2VySWQiOiJkdXJpbjkzIn0.qxY5qVzZb0hRkCO8sj-O2LbgCEfwXHAvMw9tAGFTrWE
 
 ###rent-request
-PUT http://localhost:8080/api/books/1/rent
-Authorization:
+PUT http://localhost:8080/api/books/3/rent
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkdWJvb2suY29tIiwiZXhwIjoxNTM3MzY3MzAwLCJ1c2VySWQiOiJkdXJpbjkzIn0.qxY5qVzZb0hRkCO8sj-O2LbgCEfwXHAvMw9tAGFTrWE
 
 ###giveback-request
-PUT http://localhost:8080/api/books/1/giveBack
-Authorization:
+PUT http://localhost:8080/api/books/2/giveBack
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkdWJvb2suY29tIiwiZXhwIjoxNTM3MzY3MzAwLCJ1c2VySWQiOiJkdXJpbjkzIn0.qxY5qVzZb0hRkCO8sj-O2LbgCEfwXHAvMw9tAGFTrWE
 
-###mybooks-request
-GET http://localhost:8080/api/books/mybooks
-Authorization:
 
 ###show-request
-GET http://localhost:8080/api/books/1
-Authorization:
+GET http://localhost:8080/api/books/2
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkdWJvb2suY29tIiwiZXhwIjoxNTM3MzY3MzAwLCJ1c2VySWQiOiJkdXJpbjkzIn0.qxY5qVzZb0hRkCO8sj-O2LbgCEfwXHAvMw9tAGFTrWE
 
 ###search-request
-GET http://localhost:8080/api/books?label=title&content=스페인
-Authorization:
+GET http://localhost:8080/api/books?searchType=title&content=스페인
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkdWJvb2suY29tIiwiZXhwIjoxNTM3MzY3MzAwLCJ1c2VySWQiOiJkdXJpbjkzIn0.qxY5qVzZb0hRkCO8sj-O2LbgCEfwXHAvMw9tAGFTrWE
 
 ###
+
+###show rent books-request
+GET http://localhost:8080/api/books/users/1
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkdWJvb2suY29tIiwiZXhwIjoxNTM3MzY3MzAwLCJ1c2VySWQiOiJkdXJpbjkzIn0.qxY5qVzZb0hRkCO8sj-O2LbgCEfwXHAvMw9tAGFTrWE
+
+###
+
+

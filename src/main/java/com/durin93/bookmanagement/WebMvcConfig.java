@@ -10,11 +10,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    private static final String[] EXCLUDE_PATHS = {
-            "/api/users/**",
-    };
-
-
     @Bean
     public JwtInterceptor jwtInterceptor() {
         return new JwtInterceptor();
@@ -24,8 +19,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor())
-                .addPathPatterns("/**")
-                .excludePathPatterns(EXCLUDE_PATHS);
+                .addPathPatterns("/api/books/**")
+                .addPathPatterns("/api/histories/**");
     }
 
 
