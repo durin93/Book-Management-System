@@ -4,7 +4,7 @@
 
 - Restful API ( Resource, HTTP Method, Self Description ) 도전..
 - 회원 가입
-- JWT 기반 로그인
+- 회원 로그인 (jwt)
 - 도서 등록, 수정, 삭제
 - 도서 대여, 반납
 - 도서 조회 검색
