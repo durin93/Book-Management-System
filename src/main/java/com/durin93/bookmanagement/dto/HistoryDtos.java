@@ -1,6 +1,7 @@
 package com.durin93.bookmanagement.dto;
 
 import com.durin93.bookmanagement.domain.History;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class HistoryDtos {
         return new HistoryDtos(historyDtos);
     }
 
+    @JsonIgnore
     public int getSize() {
         return histories.size();
     }

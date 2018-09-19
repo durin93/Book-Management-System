@@ -26,7 +26,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
 
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
         assertThat(response.getBody(), is(createBookDto));
-        assertNotNull(response.getBody().getSelfDescription().getLink("self"));
+        assertNotNull(response.getBody().getLink("self"));
     }
 
 
@@ -46,7 +46,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody(), is(updateBookDto));
-        assertNotNull(response.getBody().getSelfDescription().getLink("self"));
+        assertNotNull(response.getBody().getLink("self"));
     }
 
     @Test
@@ -76,7 +76,8 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
         ResponseEntity<BookDto> response = requestPUT(resourceUrl + "/rent", jwtEntity(findNormalUser()), BookDto.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertFalse(response.getBody().getRentable());
-        assertNotNull(response.getBody().getSelfDescription().getLink("self"));
+        assertNotNull(response.getBody().getLink("self"));
+        assertNotNull(response.getBody().getLink("render"));
     }
 
     @Test
@@ -95,7 +96,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
         ResponseEntity<BookDto> response = requestPUT(resourceUrl + "/giveBack", jwtEntity(findNormalUser()), BookDto.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertTrue(response.getBody().getRentable());
-        assertNotNull(response.getBody().getSelfDescription().getLink("self"));
+        assertNotNull(response.getBody().getLink("self"));
 
     }
 
@@ -110,7 +111,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody(), is(createBookDefault()));
-        assertNotNull(response.getBody().getSelfDescription().getLink("self"));
+        assertNotNull(response.getBody().getLink("self"));
     }
 
     @Test

@@ -54,6 +54,7 @@ public class History {
     }
 
     public HistoryDto toHistoryDto() {
-        return new HistoryDto(user.getId(), book.getId(), historyType, getCreateDate());
+        HistoryDto historyDto = new HistoryDto(id, user.getId(), book.getId(), historyType, getCreateDate());
+        return historyDto.addSelfDescription();
     }
 }

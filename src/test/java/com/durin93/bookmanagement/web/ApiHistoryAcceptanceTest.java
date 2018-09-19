@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 public class ApiHistoryAcceptanceTest extends AcceptanceTest {
@@ -26,6 +27,7 @@ public class ApiHistoryAcceptanceTest extends AcceptanceTest {
                 requestGET("/api/histories/" + bookId, jwtEntityForm(findManagerUser()), HistoryDto.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody().getHistoryType(), is(HistoryType.REGIST.getName()));
+        assertNotNull(response.getBody().getLink("self"));
 
     }
 

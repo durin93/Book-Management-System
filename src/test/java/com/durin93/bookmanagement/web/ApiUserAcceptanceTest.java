@@ -27,7 +27,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         ResponseEntity<UserDto> response =
                 template().postForEntity("/api/users", createUser, UserDto.class);
 
-        assertNotNull(response.getBody().getSelfDescription());
+        assertNotNull(response.getBody().getLink("self"));
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
         assertThat(response.getBody(), is(createUser));
 
@@ -47,7 +47,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         ResponseEntity<UserDto> response =
                 template().postForEntity("/api/users/authentication", loginUser, UserDto.class);
 
-        assertNotNull(response.getBody().getSelfDescription());
+        assertNotNull(response.getBody().getLink("self"));
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody().getUserId(), is("durin93"));
 
