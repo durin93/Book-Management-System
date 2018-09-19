@@ -6,6 +6,7 @@ import com.durin93.bookmanagement.exception.UnAuthorizationException;
 import com.durin93.bookmanagement.support.domain.AbstractEntity;
 import com.durin93.bookmanagement.support.domain.Level;
 import com.durin93.bookmanagement.support.exception.ErrorManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,8 +21,8 @@ public class User extends AbstractEntity {
     @Column(nullable = false, length = 20, unique = true)
     private String userId;
 
-    @Size(min = 3, max = 20)
-    @Column(nullable = false, length = 20)
+    @Size(min = 3)
+    @Column(nullable = false)
     private String password;
 
     @Size(min = 3, max = 20)
@@ -52,12 +53,12 @@ public class User extends AbstractEntity {
     }
 
     public UserDto toUserDto() {
-        UserDto userDto = new UserDto(getId(), userId, password, name, level);
+        UserDto userDto = new UserDto(getId(), userId,  name, level);
         return userDto.addSelfDescription();
     }
 
-    public Boolean matchPassword(String password) throws UnAuthenticationException {
-        if (!this.password.equals(password)) {
+    public Boolean matchPassword(String rawPassword, PasswordEncoder passwordEncoder) throws UnAuthenticationException {
+        if (!passwordEncoder.matches(rawPassword,this.password)) {
             throw new UnAuthenticationException(ErrorManager.WRONG_PASSWORD);
         }
         return true;

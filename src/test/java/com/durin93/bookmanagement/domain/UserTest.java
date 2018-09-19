@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.Assert.assertTrue;
 
@@ -20,24 +22,26 @@ public class UserTest {
 
     private User user;
 
-    private Book book;
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    public static final String PASSWORD1234 = "$2a$10$cd8Yu/5zEeRZ.Z.iwa9H/uIJEwsI/nYR84zdgP30tqDq4DmzTOaIW";
 
     @Before
     public void setUp() {
-        manager = new User("manager", "password", "관리자테스터", Level.MANAGER);
-        user = new User("user", "password", "테스터", Level.USER);
+        manager = new User("manager", PASSWORD1234, "관리자테스터", Level.MANAGER);
+        user = new User("user", PASSWORD1234, "테스터", Level.USER);
     }
 
     @Test
     public void matchPassword() {
-        assertTrue(user.matchPassword("password"));
+        assertTrue(user.matchPassword("1234",passwordEncoder));
     }
 
     @Test
     public void matchPassword_wrongPassword() {
         thrown.expect(UnAuthenticationException.class);
         thrown.expectMessage(ErrorManager.WRONG_PASSWORD);
-        user.matchPassword("cassword");
+        user.matchPassword("12345",passwordEncoder);
     }
 
     @Test

@@ -23,7 +23,7 @@ public class Book extends AbstractEntity {
     private ItemInfo itemInfo;
 
     @ManyToOne
-    @JoinColumn(name="rendor_id")
+    @JoinColumn(name="render_id")
     private User render;
 
     @Column(nullable = false)

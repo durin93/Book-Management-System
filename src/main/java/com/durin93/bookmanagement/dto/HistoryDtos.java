@@ -40,7 +40,4 @@ public class HistoryDtos {
         this.histories = histories;
     }
 
-    public HistoryDto get(int index) {
-        return histories.get(index);
-    }
 }

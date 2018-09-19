@@ -10,7 +10,9 @@ import com.durin93.bookmanagement.support.exception.ErrorManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import sun.security.util.Password;
 
 @Service
 public class UserService {
@@ -21,20 +23,23 @@ public class UserService {
 
     private JwtManager jwtManager;
 
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
-    public UserService(UserRepository userRepository, JwtManager jwtManager) {
+    public UserService(UserRepository userRepository, JwtManager jwtManager, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.jwtManager = jwtManager;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserDto regist(UserDto userDto) {
         isExist(userDto);
-        return userRepository.save(userDto.toUser()).toUserDto();
+        return userRepository.save(userDto.toUser(passwordEncoder)).toUserDto();
     }
 
     public User login(UserDto userDto) throws UnAuthenticationException {
         User user = findByUserId(userDto.getUserId());
-        user.matchPassword(userDto.getPassword());
+        user.matchPassword(userDto.getPassword(), passwordEncoder);
         return user;
     }
 

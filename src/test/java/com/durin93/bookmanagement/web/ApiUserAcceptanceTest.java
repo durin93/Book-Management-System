@@ -67,8 +67,6 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         String createBookUrl = getResourceUrl(bookDto, "self");
         bookDto = requestPUT(createBookUrl + "/rent", jwtEntity(findNormalUser()), BookDto.class).getBody();
 
-        String renderUrl = getResourceUrl(bookDto, "render");
-
         ResponseEntity<BookDtos> response =
                 requestGET("/api/books/users/"+findNormalUser().getId(), jwtEntity(findNormalUser()), BookDtos.class);
 

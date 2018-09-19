@@ -1,6 +1,7 @@
 package com.durin93.bookmanagement.service;
 
 import com.durin93.bookmanagement.domain.User;
+import com.durin93.bookmanagement.domain.UserTest;
 import com.durin93.bookmanagement.dto.UserDto;
 import com.durin93.bookmanagement.exception.UnAuthenticationException;
 import com.durin93.bookmanagement.repository.UserRepository;
@@ -15,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -30,6 +32,9 @@ public class UserServiceTest extends MockitoTest {
     @Mock
     UserRepository userRepository;
 
+    @Mock
+    PasswordEncoder passwordEncoder;
+
     @InjectMocks
     private UserService userService;
 
@@ -38,7 +43,7 @@ public class UserServiceTest extends MockitoTest {
 
     @Before
     public void setUp() {
-        user = new User("user", "password", "사용자테스터", Level.USER);
+        user = new User("user", UserTest.PASSWORD1234, "사용자테스터", Level.USER);
     }
 
     @Test
@@ -52,6 +57,7 @@ public class UserServiceTest extends MockitoTest {
     @Test
     public void login() {
         when(userRepository.findByUserId(anyString())).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(anyString(),anyString())).thenReturn(true);
         assertThat(user, is(userService.login(createUser())));
         verify(userRepository, times((1))).findByUserId(any());
     }
@@ -68,7 +74,7 @@ public class UserServiceTest extends MockitoTest {
     }
 
     public UserDto createUser() {
-        return new UserDto("user", "password", "사용자테스터");
+        return new UserDto("user", "1234", "사용자테스터");
     }
 
 

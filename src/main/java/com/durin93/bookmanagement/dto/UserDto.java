@@ -4,15 +4,14 @@ import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.support.domain.Level;
 import com.durin93.bookmanagement.support.domain.SelfDescription;
 import com.durin93.bookmanagement.web.ApiUserController;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.fasterxml.jackson.annotation.*;
 import org.springframework.hateoas.Link;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-
 
 public class UserDto {
 
@@ -22,6 +21,7 @@ public class UserDto {
     @Size(min = 3, max = 20)
     private String userId;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @Size(min = 3, max = 20)
     private String password;
 
@@ -43,8 +43,9 @@ public class UserDto {
         this.name = name;
     }
 
-    public UserDto(Long id, String userId, String password, String name, Level level) {
-        this(userId, password, name);
+    public UserDto(Long id, String userId,  String name, Level level) {
+        this.userId = userId;
+        this.name = name;
         this.id = id;
         this.level = level;
     }
@@ -90,8 +91,8 @@ public class UserDto {
         return selfDescription.getLink(rel);
     }
 
-    public User toUser() {
-        return new User(this.userId, this.password, this.name);
+    public User toUser(PasswordEncoder passwordEncoder) {
+        return new User(this.userId, passwordEncoder.encode(this.password), this.name);
     }
 
     public UserDto addSelfDescription() {
@@ -107,14 +108,12 @@ public class UserDto {
         UserDto userDto = (UserDto) o;
 
         if (userId != null ? !userId.equals(userDto.userId) : userDto.userId != null) return false;
-        if (password != null ? !password.equals(userDto.password) : userDto.password != null) return false;
         return name != null ? name.equals(userDto.name) : userDto.name == null;
     }
 
     @Override
     public int hashCode() {
         int result = userId != null ? userId.hashCode() : 0;
-        result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
@@ -124,7 +123,6 @@ public class UserDto {
         return "UserDto{" +
                 "id='" + id + '\'' +
                 ", userId='" + userId + '\'' +
-                ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", level=" + level +
                 ", links=" + selfDescription +
