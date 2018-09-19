@@ -1,6 +1,6 @@
 package com.durin93.bookmanagement.exception;
 
-import com.durin93.bookmanagement.support.domain.ErrorManager;
+import com.durin93.bookmanagement.support.exception.ErrorManager;
 
 public class RentalException extends RuntimeException {
 
@@ -8,8 +8,5 @@ public class RentalException extends RuntimeException {
         super(message);
     }
 
-    public RentalException(ErrorManager errorManager) {
-        super(errorManager.getMessage());
-    }
 
 }

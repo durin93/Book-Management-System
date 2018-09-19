@@ -2,8 +2,8 @@ package com.durin93.bookmanagement.domain;
 
 import com.durin93.bookmanagement.exception.UnAuthenticationException;
 import com.durin93.bookmanagement.exception.UnAuthorizationException;
-import com.durin93.bookmanagement.support.domain.ErrorManager;
 import com.durin93.bookmanagement.support.domain.Level;
+import com.durin93.bookmanagement.support.exception.ErrorManager;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class UserTest {
     @Test
     public void matchPassword_wrongPassword() {
         thrown.expect(UnAuthenticationException.class);
-        thrown.expectMessage(ErrorManager.WRONG_PASSWORD.getMessage());
+        thrown.expectMessage(ErrorManager.WRONG_PASSWORD);
         user.matchPassword("cassword");
     }
 
@@ -48,7 +48,7 @@ public class UserTest {
     @Test
     public void checkManager_user() {
         thrown.expect(UnAuthorizationException.class);
-        thrown.expectMessage(ErrorManager.NO_MANAGER.getMessage());
+        thrown.expectMessage(ErrorManager.NO_MANAGER);
         user.checkManager();
     }
 

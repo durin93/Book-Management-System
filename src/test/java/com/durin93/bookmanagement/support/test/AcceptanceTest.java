@@ -46,16 +46,16 @@ public abstract class AcceptanceTest {
         return userRepository.findByUserId(userId).get();
     }
 
-    protected <T> ResponseEntity<T> requestGET(String resourceUrl, HttpEntity requestEntity, Class<T> responseType){
-        return template().exchange(resourceUrl,HttpMethod.GET,requestEntity, responseType);
+    protected <T> ResponseEntity<T> requestGET(String resourceUrl, HttpEntity requestEntity, Class<T> responseType) {
+        return template().exchange(resourceUrl, HttpMethod.GET, requestEntity, responseType);
     }
 
-    protected <T> ResponseEntity<T> requestPUT(String resourceUrl, HttpEntity requestEntity, Class<T> responseType){
-        return template().exchange(resourceUrl,HttpMethod.PUT,requestEntity, responseType);
+    protected <T> ResponseEntity<T> requestPUT(String resourceUrl, HttpEntity requestEntity, Class<T> responseType) {
+        return template().exchange(resourceUrl, HttpMethod.PUT, requestEntity, responseType);
     }
 
-    protected <T> ResponseEntity<T> requestDELETE(String resourceUrl, HttpEntity requestEntity, Class<T> responseType){
-        return template().exchange(resourceUrl,HttpMethod.DELETE, requestEntity, responseType);
+    protected <T> ResponseEntity<T> requestDELETE(String resourceUrl, HttpEntity requestEntity, Class<T> responseType) {
+        return template().exchange(resourceUrl, HttpMethod.DELETE, requestEntity, responseType);
     }
 
     protected String createJwt(User user) {
@@ -84,7 +84,7 @@ public abstract class AcceptanceTest {
         return new HttpEntity(jwtHeaders(user));
     }
 
-    protected  HttpEntity jwtEntityForm(User user) {
+    protected HttpEntity jwtEntityForm(User user) {
         return new HttpEntity(jwtHeadersFormType(user));
     }
 
@@ -96,15 +96,15 @@ public abstract class AcceptanceTest {
 
     protected BookDto createBookDefault() {
 
-        return new BookDto("스페인 너는 자유다", "손미나",LocalDate.of(2006, 7, 28),340,582);
+        return new BookDto("스페인 너는 자유다", "손미나", LocalDate.of(2006, 7, 28), 340, 582);
     }
 
     protected BookDto createBookDefault2() {
-        return new BookDto("여행의 기술", "알랭 드 보통",LocalDate.of(2011, 12, 10),328,470);
+        return new BookDto("여행의 기술", "알랭 드 보통", LocalDate.of(2011, 12, 10), 328, 470);
     }
 
     protected BookDto createBookDefault3() {
-        return new BookDto("내가 사랑한 유럽 TOP10", "정여울", LocalDate.of(2014,1,10),380,575);
+        return new BookDto("내가 사랑한 유럽 TOP10", "정여울", LocalDate.of(2014, 1, 10), 380, 575);
     }
 
     protected BookDto createBook(BookDto bookDto) {

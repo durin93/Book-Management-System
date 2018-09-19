@@ -1,13 +1,15 @@
 package com.durin93.bookmanagement.service;
 
 import com.durin93.bookmanagement.domain.Book;
+import com.durin93.bookmanagement.domain.History;
 import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.dto.BookDto;
 import com.durin93.bookmanagement.dto.BookDtos;
 import com.durin93.bookmanagement.dto.SearchDto;
 import com.durin93.bookmanagement.exception.NotFoundException;
 import com.durin93.bookmanagement.repository.BookRepository;
-import com.durin93.bookmanagement.support.domain.ErrorManager;
+import com.durin93.bookmanagement.support.domain.HistoryType;
+import com.durin93.bookmanagement.support.exception.ErrorManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,16 +20,17 @@ import java.util.List;
 @Transactional
 public class BookService {
 
-
     private BookRepository bookRepository;
 
     private UserService userService;
 
+    private HistoryService historyService;
 
     @Autowired
-    public BookService(BookRepository bookRepository, UserService userService) {
+    public BookService(BookRepository bookRepository, UserService userService, HistoryService historyService) {
         this.bookRepository = bookRepository;
         this.userService = userService;
+        this.historyService = historyService;
     }
 
     public Book findExistBookById(Long id) {
@@ -38,11 +41,11 @@ public class BookService {
         return bookRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorManager.NOT_EXIST_BOOK));
     }
 
-    public List<Book> findBooksByRender(){
+    public List<Book> findBooksByRender() {
         return bookRepository.findAllByRender(userService.loginUser());
     }
 
-    public List<Book> findBooksByRender(User user){
+    public List<Book> findBooksByRender(User user) {
         return bookRepository.findAllByRender(user);
     }
 
@@ -50,30 +53,39 @@ public class BookService {
         User user = userService.loginUser();
         user.checkManager();
         Book book = bookDto.toBook();
+        registHistory(book, user, HistoryType.REGIST);
         return bookRepository.save(book).toBookDto();
     }
 
     public BookDto update(BookDto bookDto, Long id) {
-        User loginUser = userService.loginUser();
+        User user = userService.loginUser();
         Book book = findExistBookById(id);
-        book.update(loginUser,bookDto);
+        book.update(user, bookDto);
+        registHistory(book, user, HistoryType.UPDATE);
         return book.toBookDto();
     }
 
     public BookDto delete(Long id) {
-        User loginUser = userService.loginUser();
+        User user = userService.loginUser();
         Book book = findExistBookById(id);
-        return book.delete(loginUser).toBookDto();
+        book.delete(user);
+        registHistory(book, user, HistoryType.DELETE);
+        return book.toBookDto();
     }
 
     public BookDto rent(Long id) {
+        User user = userService.loginUser();
         Book book = findExistBookById(id);
-        return book.rentBy(userService.loginUser()).toBookDto();
+        book.rentBy(user);
+        registHistory(book, user, HistoryType.RENT);
+        return book.toBookDto();
     }
 
     public BookDto giveBack(Long id) {
+        User user = userService.loginUser();
         Book book = findExistBookById(id);
-        book.giveBackBy();
+        book.giveBack();
+        registHistory(book, user, HistoryType.GIVEBACK);
         return book.toBookDto();
     }
 
@@ -82,19 +94,22 @@ public class BookService {
     }
 
     public BookDtos findRentBooks(Long id) {
-        User render = userService.findById(id);
-        return BookDtos.of(findBooksByRender(render));
+        return BookDtos.of(findBooksByRender(userService.findById(id)));
     }
 
     public BookDtos search(SearchDto searchDto) {
         String content = searchDto.getContent();
-        if(searchDto.isLabelTitle()) {
-            return BookDtos.of(bookRepository.findAllByTitleLike("%"+content+"%"));
+        if (searchDto.isSearchTypeTitle()) {
+            return BookDtos.of(bookRepository.findAllByTitleLike("%" + content + "%"));
         }
-        if(searchDto.isLabelAuthor()) {
-            return BookDtos.of(bookRepository.findAllByAuthorLike("%"+content+"%"));
+        if (searchDto.isSearchTypeAuthor()) {
+            return BookDtos.of(bookRepository.findAllByAuthorLike("%" + content + "%"));
         }
         return BookDtos.of(bookRepository.findAllBooks(content));
+    }
+
+    public History registHistory(Book book, User user, HistoryType historyType) {
+        return historyService.regist(book, user, historyType);
     }
 
 }

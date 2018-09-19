@@ -9,8 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDate;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -125,7 +123,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
         BookDto createBook2 = requestGET(resourceUrl2, jwtEntity(findNormalUser()), BookDto.class).getBody();
 
         ResponseEntity<BookDtos> response =
-                requestGET("/api/books?label=title&content=스페인", jwtEntityForm(findNormalUser()), BookDtos.class);
+                requestGET("/api/books?searchType=title&content=스페인", jwtEntityForm(findNormalUser()), BookDtos.class);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertTrue(response.getBody().hasBook(createBook));
@@ -142,7 +140,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
         BookDto createBook2 = requestGET(resourceUrl2, jwtEntity(findNormalUser()), BookDto.class).getBody();
 
         ResponseEntity<BookDtos> response =
-                requestGET("/api/books?label=author&content=알랭 드 보통", jwtEntityForm(findNormalUser()), BookDtos.class);
+                requestGET("/api/books?searchType=author&content=알랭 드 보통", jwtEntityForm(findNormalUser()), BookDtos.class);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertFalse(response.getBody().hasBook(createBook));
@@ -159,7 +157,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
         BookDto createBook2 = requestGET(resourceUrl2, jwtEntity(findNormalUser()), BookDto.class).getBody();
 
         ResponseEntity<BookDtos> response =
-                requestGET("/api/books?label=all&content=알랭 드 보통", jwtEntityForm(findNormalUser()), BookDtos.class);
+                requestGET("/api/books?searchType=all&content=알랭 드 보통", jwtEntityForm(findNormalUser()), BookDtos.class);
 
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertFalse(response.getBody().hasBook(createBook));
@@ -176,7 +174,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
         BookDto createBook2 = requestGET(resourceUrl2, jwtEntity(findNormalUser()), BookDto.class).getBody();
 
         ResponseEntity<BookDtos> response =
-                requestGET("/api/books?label=all&content=두린", jwtEntityForm(findNormalUser()), BookDtos.class);
+                requestGET("/api/books?searchType=all&content=두린", jwtEntityForm(findNormalUser()), BookDtos.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertFalse(response.getBody().hasBook(createBook));
         assertFalse(response.getBody().hasBook(createBook2));

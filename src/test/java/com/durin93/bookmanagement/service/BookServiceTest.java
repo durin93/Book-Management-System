@@ -8,16 +8,13 @@ import com.durin93.bookmanagement.dto.SearchDto;
 import com.durin93.bookmanagement.exception.RentalException;
 import com.durin93.bookmanagement.exception.UnAuthorizationException;
 import com.durin93.bookmanagement.repository.BookRepository;
-import com.durin93.bookmanagement.support.domain.ErrorManager;
 import com.durin93.bookmanagement.support.domain.Level;
+import com.durin93.bookmanagement.support.exception.ErrorManager;
+import com.durin93.bookmanagement.support.test.MockitoTest;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -30,15 +27,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
-public class BookServiceTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
+public class BookServiceTest extends MockitoTest {
 
     @Mock
     BookRepository bookRepository;
+
+    @Mock
+    HistoryService historyService;
 
     @Mock
     UserService userService;
@@ -72,7 +67,7 @@ public class BookServiceTest {
         mockWhenLoginUser();
 
         thrown.expect(UnAuthorizationException.class);
-        thrown.expectMessage(ErrorManager.NO_MANAGER.getMessage());
+        thrown.expectMessage(ErrorManager.NO_MANAGER);
         bookService.regist(createBook());
         fail();
     }
@@ -93,7 +88,7 @@ public class BookServiceTest {
         mockWhenLoginUser();
 
         thrown.expect(UnAuthorizationException.class);
-        thrown.expectMessage(ErrorManager.NO_MANAGER.getMessage());
+        thrown.expectMessage(ErrorManager.NO_MANAGER);
 
         when(bookRepository.findByIdAndIsDeletedIsFalse(anyLong())).thenReturn(Optional.of(book));
 
@@ -121,7 +116,7 @@ public class BookServiceTest {
         when(bookRepository.findByIdAndIsDeletedIsFalse(anyLong())).thenReturn(Optional.of(book));
 
         thrown.expect(UnAuthorizationException.class);
-        thrown.expectMessage(ErrorManager.NO_MANAGER.getMessage());
+        thrown.expectMessage(ErrorManager.NO_MANAGER);
         bookService.delete(1L);
         fail();
     }
@@ -143,7 +138,7 @@ public class BookServiceTest {
         when(bookRepository.findByIdAndIsDeletedIsFalse(anyLong())).thenReturn(Optional.of(book.rentBy(user)));
 
         thrown.expect(RentalException.class);
-        thrown.expectMessage(ErrorManager.ALREADY_RENT.getMessage());
+        thrown.expectMessage(ErrorManager.ALREADY_RENT);
         bookService.rent(1L);
         fail();
     }
@@ -164,7 +159,7 @@ public class BookServiceTest {
 
         when(bookRepository.findByIdAndIsDeletedIsFalse(anyLong())).thenReturn(Optional.of(book));
         thrown.expect(RentalException.class);
-        thrown.expectMessage(ErrorManager.ALREADY_GIVEBACK.getMessage());
+        thrown.expectMessage(ErrorManager.ALREADY_GIVEBACK);
         bookService.giveBack( 1L);
         fail();
     }

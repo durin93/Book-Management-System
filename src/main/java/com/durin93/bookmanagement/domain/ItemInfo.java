@@ -4,7 +4,7 @@ package com.durin93.bookmanagement.domain;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Embeddable
 public class ItemInfo {
@@ -32,23 +32,16 @@ public class ItemInfo {
         return releaseDate;
     }
 
-    public void setReleaseDate(LocalDate releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
     public int getPageNumber() {
         return pageNumber;
-    }
-
-    public void setPageNumber(int pageNumber) {
-        this.pageNumber = pageNumber;
     }
 
     public int getWeight() {
         return weight;
     }
 
-    public void setWeight(int weight) {
-        this.weight = weight;
+    public String getItemInfo() {
+        return releaseDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")) + pageNumber + "쪽" + weight + "g";
     }
+
 }

@@ -4,10 +4,13 @@ import com.durin93.bookmanagement.dto.UserDto;
 import com.durin93.bookmanagement.exception.UnAuthenticationException;
 import com.durin93.bookmanagement.exception.UnAuthorizationException;
 import com.durin93.bookmanagement.support.domain.AbstractEntity;
-import com.durin93.bookmanagement.support.domain.ErrorManager;
 import com.durin93.bookmanagement.support.domain.Level;
+import com.durin93.bookmanagement.support.exception.ErrorManager;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -26,6 +29,7 @@ public class User extends AbstractEntity {
     private String name;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Level level = Level.USER;
 
     public User() {

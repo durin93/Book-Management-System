@@ -4,8 +4,9 @@ import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.dto.UserDto;
 import com.durin93.bookmanagement.exception.UnAuthenticationException;
 import com.durin93.bookmanagement.repository.UserRepository;
-import com.durin93.bookmanagement.support.domain.ErrorManager;
+import com.durin93.bookmanagement.support.exception.ErrorManager;
 import com.durin93.bookmanagement.support.domain.Level;
+import com.durin93.bookmanagement.support.test.MockitoTest;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,11 +24,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
-public class UserServiceTest {
+public class UserServiceTest extends MockitoTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Mock
     UserRepository userRepository;
@@ -63,7 +61,7 @@ public class UserServiceTest {
         when(userRepository.findByUserId(anyString())).thenReturn(Optional.of(user));
 
         thrown.expect(UnAuthenticationException.class);
-        thrown.expectMessage(ErrorManager.EXIST_ID.getMessage());
+        thrown.expectMessage(ErrorManager.EXIST_ID);
 
         userService.isExist(createUser());
         verify(userRepository, times((1))).findByUserId(any());

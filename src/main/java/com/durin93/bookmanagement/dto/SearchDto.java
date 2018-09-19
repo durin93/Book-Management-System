@@ -2,15 +2,15 @@ package com.durin93.bookmanagement.dto;
 
 public class SearchDto {
 
-    private String label;
+    private String searchType;
 
     private String content;
 
     public SearchDto() {
     }
 
-    public SearchDto(String label, String content) {
-        this.label = label;
+    public SearchDto(String searchType, String content) {
+        this.searchType = searchType;
         this.content = content;
     }
 
@@ -22,26 +22,26 @@ public class SearchDto {
         this.content = content;
     }
 
-    public String getLabel() {
-        return label;
+    public String getSearchType() {
+        return searchType;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setSearchType(String searchType) {
+        this.searchType = searchType;
     }
 
-    public boolean isLabelTitle() {
-        return  label.equals("title");
+    public boolean isSearchTypeTitle() {
+        return searchType.equals("title");
     }
 
-    public boolean isLabelAuthor() {
-        return  label.equals("author");
+    public boolean isSearchTypeAuthor() {
+        return searchType.equals("author");
     }
 
     @Override
     public String toString() {
         return "SearchDto{" +
-                "label='" + label + '\'' +
+                "searchType='" + searchType + '\'' +
                 ", content='" + content + '\'' +
                 '}';
     }

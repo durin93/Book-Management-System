@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class AbstractEntity {
+public abstract class AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

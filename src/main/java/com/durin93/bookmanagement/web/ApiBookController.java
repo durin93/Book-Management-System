@@ -36,19 +36,19 @@ public class ApiBookController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         bookService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("{id}/rent")
-    public ResponseEntity<BookDto> rent(@PathVariable Long id){
+    public ResponseEntity<BookDto> rent(@PathVariable Long id) {
         BookDto registedBook = bookService.rent(id);
         return new ResponseEntity<>(registedBook, HttpStatus.OK);
     }
 
     @PutMapping("{id}/giveBack")
-    public ResponseEntity<BookDto> giveBack(@PathVariable Long id){
+    public ResponseEntity<BookDto> giveBack(@PathVariable Long id) {
         BookDto registedBook = bookService.giveBack(id);
         return new ResponseEntity<>(registedBook, HttpStatus.OK);
     }

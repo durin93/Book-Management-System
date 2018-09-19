@@ -2,7 +2,6 @@ package com.durin93.bookmanagement.repository;
 
 import com.durin93.bookmanagement.domain.Book;
 import com.durin93.bookmanagement.domain.User;
-import com.durin93.bookmanagement.dto.BookDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface BookRepository extends JpaRepository<Book,Long> {
+public interface BookRepository extends JpaRepository<Book, Long> {
 
     Optional<Book> findByIdAndIsDeletedIsFalse(Long id);
 
@@ -21,6 +20,6 @@ public interface BookRepository extends JpaRepository<Book,Long> {
     List<Book> findAllByAuthorLike(String author);
 
     @Query("SELECT b FROM Book b where b.title like %:value% or b.author like %:value%")
-    List<Book> findAllBooks(@Param("value")String value);
+    List<Book> findAllBooks(@Param("value") String value);
 
 }

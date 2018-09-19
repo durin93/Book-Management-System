@@ -2,8 +2,8 @@ package com.durin93.bookmanagement.domain;
 
 import com.durin93.bookmanagement.dto.BookDto;
 import com.durin93.bookmanagement.exception.RentalException;
-import com.durin93.bookmanagement.support.domain.ErrorManager;
 import com.durin93.bookmanagement.support.domain.Level;
+import com.durin93.bookmanagement.support.exception.ErrorManager;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class BookTest {
     public void setUp() {
         manager = new User("manager", "password", "관리자테스터", Level.MANAGER);
         user = new User("user", "password", "사용자테스터", Level.USER);
-        book = new BookDto("여행의 기술", "알랭 드 보통",LocalDate.of(2011, 12, 10),328,470).toBook();
+        book = new BookDto("여행의 기술", "알랭 드 보통", LocalDate.of(2011, 12, 10), 328, 470).toBook();
     }
 
     @Test
@@ -42,7 +42,7 @@ public class BookTest {
         book.rentBy(user);
 
         thrown.expect(RentalException.class);
-        thrown.expectMessage(ErrorManager.ALREADY_RENT.getMessage());
+        thrown.expectMessage(ErrorManager.ALREADY_RENT);
         book.rentBy(user);
         fail();
     }
@@ -50,25 +50,25 @@ public class BookTest {
     @Test
     public void giveBack() {
         book.rentBy(user);
-        book.giveBackBy();
+        book.giveBack();
         assertNull(book.getRender());
     }
 
     @Test
     public void giveBack_already_giveBack() {
         book.rentBy(user);
-        book.giveBackBy();
+        book.giveBack();
 
         thrown.expect(RentalException.class);
-        thrown.expectMessage(ErrorManager.ALREADY_GIVEBACK.getMessage());
-        book.giveBackBy();
+        thrown.expectMessage(ErrorManager.ALREADY_GIVEBACK);
+        book.giveBack();
         fail();
     }
 
     @Test
     public void update() {
 
-        book.update(manager,createBook());
+        book.update(manager, createBook());
         assertThat(book.toBookDto(), is(createBook()));
     }
 
@@ -81,7 +81,7 @@ public class BookTest {
 
 
     public BookDto createBook() {
-        return new BookDto("스페인 너는 자유다", "손미나",LocalDate.of(2006, 7, 28),340,582);
+        return new BookDto("스페인 너는 자유다", "손미나", LocalDate.of(2006, 7, 28), 340, 582);
     }
 
 

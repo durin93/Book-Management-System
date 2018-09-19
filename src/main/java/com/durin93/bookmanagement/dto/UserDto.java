@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.hateoas.Link;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -27,6 +28,7 @@ public class UserDto {
     @Size(min = 3, max = 20)
     private String name;
 
+    @NotBlank
     private Level level;
 
     @JsonUnwrapped

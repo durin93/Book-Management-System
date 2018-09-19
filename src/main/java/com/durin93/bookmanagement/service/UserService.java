@@ -6,7 +6,7 @@ import com.durin93.bookmanagement.exception.NotFoundException;
 import com.durin93.bookmanagement.exception.UnAuthenticationException;
 import com.durin93.bookmanagement.repository.UserRepository;
 import com.durin93.bookmanagement.security.JwtManager;
-import com.durin93.bookmanagement.support.domain.ErrorManager;
+import com.durin93.bookmanagement.support.exception.ErrorManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

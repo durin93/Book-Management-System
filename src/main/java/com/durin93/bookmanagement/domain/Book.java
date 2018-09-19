@@ -3,7 +3,7 @@ package com.durin93.bookmanagement.domain;
 import com.durin93.bookmanagement.dto.BookDto;
 import com.durin93.bookmanagement.exception.RentalException;
 import com.durin93.bookmanagement.support.domain.AbstractEntity;
-import com.durin93.bookmanagement.support.domain.ErrorManager;
+import com.durin93.bookmanagement.support.exception.ErrorManager;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -23,7 +23,7 @@ public class Book extends AbstractEntity {
     private ItemInfo itemInfo;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_book_rendor"))
+    @JoinColumn(name="rendor_id")
     private User render;
 
     @Column(nullable = false)
@@ -51,8 +51,6 @@ public class Book extends AbstractEntity {
         return bookDto.addSelfDescription(render);
     }
 
-
-
     public User getRender() {
         return render;
     }
@@ -66,6 +64,7 @@ public class Book extends AbstractEntity {
         checkRentable();
         title = bookDto.getTitle();
         author = bookDto.getAuthor();
+        itemInfo = bookDto.convertItemInfo();
         return this;
     }
 
@@ -75,7 +74,7 @@ public class Book extends AbstractEntity {
         return this;
     }
 
-    public void giveBackBy() {
+    public void giveBack() {
         if (checkRender()) {
             throw new RentalException(ErrorManager.ALREADY_GIVEBACK);
         }
