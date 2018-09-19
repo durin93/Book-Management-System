@@ -22,14 +22,9 @@ public class ApiUserController {
 
     private static final Logger log = LoggerFactory.getLogger(ApiUserController.class);
 
-    private JwtManager jwtManager;
-
     private UserService userService;
 
-
-    @Autowired
-    public ApiUserController(JwtManager jwtManager, UserService userService) {
-        this.jwtManager = jwtManager;
+    public ApiUserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -43,7 +38,7 @@ public class ApiUserController {
     @PostMapping("authentication")
     public ResponseEntity<UserDto> login(@RequestBody UserDto userDto, HttpServletResponse response) {
         User loginUser = userService.login(userDto);
-        String token = jwtManager.create(loginUser);
+        String token = userService.createToken(loginUser);
         response.setHeader("Authorization", token);
         return new ResponseEntity<>(loginUser.toUserDto(), HttpStatus.OK);
     }

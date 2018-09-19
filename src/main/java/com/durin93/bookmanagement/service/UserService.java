@@ -48,6 +48,9 @@ public class UserService {
         }
     }
 
+    public String createToken(User loginUser) {
+        return jwtManager.create(loginUser);
+    }
 
     public User findById(long id) {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorManager.NOT_EXIST_ID));
@@ -56,5 +59,6 @@ public class UserService {
     public User findByUserId(String userId) {
         return userRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException(ErrorManager.NOT_EXIST_ID));
     }
+
 
 }
