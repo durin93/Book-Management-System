@@ -15,7 +15,7 @@
 ---
 
 ## URI
-### Users API
+### Users API https://github.com/durin93/Book-Management-System/wiki/USERS-API
 
 메소드 | 경로 | 설명 | 
 |----- | ----------- | ------- | 
@@ -23,7 +23,7 @@
 | POST |  /api/users/authentication | 로그인 |
 
 
-### Books API
+### Books API https://github.com/durin93/Book-Management-System/wiki/Books-API
 
 메소드 | 경로 | 설명 | 
 |----- | ----------- | ------- | 
@@ -37,7 +37,7 @@
 | GET |  /api/books/users/{id} | 사용자가 대여한 도서 목록 조회 |
 
 
-### Histories API
+### Histories API https://github.com/durin93/Book-Management-System/wiki/Histories-API
 
 메소드 | 경로 | 설명 | 
 |----- | ----------- | ------- | 
