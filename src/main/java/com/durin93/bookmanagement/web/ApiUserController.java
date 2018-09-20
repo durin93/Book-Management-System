@@ -2,11 +2,9 @@ package com.durin93.bookmanagement.web;
 
 import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.dto.UserDto;
-import com.durin93.bookmanagement.security.JwtManager;
 import com.durin93.bookmanagement.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
