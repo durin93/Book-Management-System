@@ -54,7 +54,7 @@ https://github.com/durin93/Book-Management-System/wiki/Histories-API
 - IDE - Intelli J
 - Language - Java 8
 - Framework - Spring boot 2.0.4
-- Database - MySQL
+- Database - MySQL,(H2)
 
 ## 실행 하기
 
@@ -64,3 +64,6 @@ https://github.com/durin93/Book-Management-System/wiki/Histories-API
 (중지 시 CTRL + C)
 
 2.스프링부트로 프로젝트를 열고 BookmanagementApplication 을 실행시킵니다.
+
+(h2 database 사용 시 application.properties에 mysql설정 대신에 h2설정을 활성화 시킨 후 실행,
+http://localhost:8080/h2-console 해당주소에 접속해서 내용 확인.)
