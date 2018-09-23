@@ -6,6 +6,7 @@ import com.durin93.bookmanagement.exception.UnAuthorizationException;
 import com.durin93.bookmanagement.support.domain.AbstractEntity;
 import com.durin93.bookmanagement.support.domain.Level;
 import com.durin93.bookmanagement.support.exception.ErrorManager;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.Column;
@@ -15,6 +16,7 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.Size;
 
 @Entity
+@BatchSize(size = 10)
 public class User extends AbstractEntity {
 
     @Size(min = 3, max = 20)

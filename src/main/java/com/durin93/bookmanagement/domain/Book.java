@@ -4,11 +4,13 @@ import com.durin93.bookmanagement.dto.BookDto;
 import com.durin93.bookmanagement.exception.RentalException;
 import com.durin93.bookmanagement.support.domain.AbstractEntity;
 import com.durin93.bookmanagement.support.exception.ErrorManager;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 @Entity
+@BatchSize(size = 10)
 public class Book extends AbstractEntity {
 
     @Size(min = 3, max = 20)

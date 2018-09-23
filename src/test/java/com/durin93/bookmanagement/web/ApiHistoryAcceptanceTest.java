@@ -48,4 +48,12 @@ public class ApiHistoryAcceptanceTest extends AcceptanceTest {
         assertThat(response.getBody().getSize(), not(0));
     }
 
+    @Test
+    public void search_all() {
+        ResponseEntity<HistoryDtos> response =
+                requestGET("/api/histories?searchType=all", jwtEntityForm(findManagerUser()), HistoryDtos.class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody().getSize(), not(0));
+    }
+
 }
