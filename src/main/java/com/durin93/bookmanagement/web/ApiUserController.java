@@ -26,7 +26,7 @@ public class ApiUserController {
     @PostMapping("")
     public ResponseEntity<UserDto> regist(@RequestBody UserDto userDto) {
         UserDto registerUser = userService.regist(userDto);
-        return new ResponseEntity<>(registerUser, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(registerUser);
     }
 
 
@@ -35,13 +35,13 @@ public class ApiUserController {
         User loginUser = userService.login(userDto);
         String token = userService.createToken(loginUser);
         response.setHeader("Authorization", token);
-        return new ResponseEntity<>(loginUser.toUserDto(), HttpStatus.OK);
+        return ResponseEntity.ok(loginUser.toUserDto());
     }
 
     @GetMapping("{id}")
     public ResponseEntity<UserDto> show(@PathVariable Long id) {
         User user = userService.findById(id);
-        return new ResponseEntity<>(user.toUserDto(), HttpStatus.OK);
+        return ResponseEntity.ok(user.toUserDto());
     }
 
 

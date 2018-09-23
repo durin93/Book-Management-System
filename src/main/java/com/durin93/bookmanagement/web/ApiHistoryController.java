@@ -30,13 +30,13 @@ public class ApiHistoryController {
     @GetMapping("{id}")
     public ResponseEntity<HistoryDto> show(@PathVariable Long id) {
         History history = historyService.show(id);
-        return new ResponseEntity<>(history.toHistoryDto(), HttpStatus.OK);
+        return ResponseEntity.ok(history.toHistoryDto());
     }
 
     @GetMapping("")
     public ResponseEntity<HistoryDtos> search(String searchType, Long id) {
         HistoryDtos histories = historyService.search(searchType, id);
-        return new ResponseEntity<>(histories, HttpStatus.OK);
+        return ResponseEntity.ok(histories);
     }
 
 

@@ -57,17 +57,5 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
         assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
 
-    @Test
-    public void showRentBooks() {
-        BookDto bookDto = createBook(createBookDefault());
-        String createBookUrl = getResourceUrl(bookDto, "self");
-        bookDto = requestPUT(createBookUrl + "/rent", jwtEntity(findNormalUser()), BookDto.class).getBody();
-
-        ResponseEntity<BookDtos> response =
-                requestGET("/api/books/users/"+findNormalUser().getId(), jwtEntity(findNormalUser()), BookDtos.class);
-
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertTrue(response.getBody().hasBook(requestGET(createBookUrl, jwtEntity(findNormalUser()), BookDto.class).getBody()));
-    }
 
 }

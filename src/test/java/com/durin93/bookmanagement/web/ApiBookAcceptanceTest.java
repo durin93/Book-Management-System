@@ -114,6 +114,20 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
         assertNotNull(response.getBody().getLink("self"));
     }
 
+
+    @Test
+    public void showRentBooks() {
+        BookDto bookDto = createBook(createBookDefault());
+        String createBookUrl = getResourceUrl(bookDto, "self");
+        bookDto = requestPUT(createBookUrl + "/rent", jwtEntity(findNormalUser()), BookDto.class).getBody();
+
+        ResponseEntity<BookDtos> response =
+                requestGET("/api/books/users/"+findNormalUser().getId(), jwtEntity(findNormalUser()), BookDtos.class);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertTrue(response.getBody().hasBook(requestGET(createBookUrl, jwtEntity(findNormalUser()), BookDto.class).getBody()));
+    }
+
     @Test
     public void search_title() {
 

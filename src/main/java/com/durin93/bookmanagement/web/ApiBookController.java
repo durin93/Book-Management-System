@@ -26,50 +26,50 @@ public class ApiBookController {
     @PostMapping("")
     public ResponseEntity<BookDto> regist(@RequestBody BookDto bookDto) {
         BookDto registedBook = bookService.regist(bookDto);
-        return new ResponseEntity<>(registedBook, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(registedBook);
     }
 
     @PutMapping("{id}")
     public ResponseEntity<BookDto> update(@PathVariable Long id, @RequestBody BookDto bookDto) {
         BookDto updatedBook = bookService.update(bookDto, id);
-        return new ResponseEntity<>(updatedBook, HttpStatus.OK);
+        return ResponseEntity.ok(updatedBook);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         bookService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("{id}/rent")
     public ResponseEntity<BookDto> rent(@PathVariable Long id) {
         BookDto rentedBook = bookService.rent(id);
-        return new ResponseEntity<>(rentedBook, HttpStatus.OK);
+        return ResponseEntity.ok(rentedBook);
     }
 
     @PutMapping("{id}/giveBack")
     public ResponseEntity<BookDto> giveBack(@PathVariable Long id) {
         BookDto giveBackedBook = bookService.giveBack(id);
-        return new ResponseEntity<>(giveBackedBook, HttpStatus.OK);
+        return ResponseEntity.ok(giveBackedBook);
     }
 
 
     @GetMapping("{id}")
     public ResponseEntity<BookDto> show(@PathVariable Long id) {
         BookDto findBook = bookService.findBookById(id).toBookDto();
-        return new ResponseEntity<>(findBook, HttpStatus.OK);
+        return ResponseEntity.ok(findBook);
     }
 
     @GetMapping("")
     public ResponseEntity<BookDtos> search(SearchDto searchDto) {
         BookDtos searchBook = bookService.search(searchDto);
-        return new ResponseEntity<>(searchBook, HttpStatus.OK);
+        return ResponseEntity.ok(searchBook);
     }
 
     @GetMapping("users/{id}")
     public ResponseEntity<BookDtos> showRentBooks(@PathVariable Long id) {
         BookDtos rentBooks = bookService.findRentBooks(id);
-        return new ResponseEntity<>(rentBooks, HttpStatus.OK);
+        return ResponseEntity.ok(rentBooks);
     }
 
 }
