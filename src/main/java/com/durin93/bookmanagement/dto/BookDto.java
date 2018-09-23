@@ -9,7 +9,7 @@ import com.durin93.bookmanagement.web.ApiUserController;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.hateoas.Link;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -33,14 +33,14 @@ public class BookDto {
     @JsonUnwrapped
     private SelfDescription selfDescription = new SelfDescription();
 
-    @NotBlank
+    @NotNull
     private LocalDate releaseDate;
 
-    @NotBlank
+    @NotNull
     @Positive
     private int pageNumber;
 
-    @NotBlank
+    @NotNull
     @Positive
     private int weight;
 

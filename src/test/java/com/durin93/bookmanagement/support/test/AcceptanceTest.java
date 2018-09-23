@@ -12,6 +12,8 @@ import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -112,5 +114,13 @@ public abstract class AcceptanceTest {
                 postForEntity("/api/books", jwtEntity(findManagerUser(), bookDto), BookDto.class)
                 .getBody();
     }
+
+    protected Map<String,String> loginUserMap(){
+        Map<String, String> loginUser =  new HashMap<>();
+        loginUser.put("userId", "durin93");
+        loginUser.put("password", "1234");
+        return loginUser;
+    }
+
 
 }

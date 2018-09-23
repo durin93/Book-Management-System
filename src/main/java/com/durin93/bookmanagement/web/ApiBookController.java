@@ -8,7 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/books")
@@ -24,15 +27,19 @@ public class ApiBookController {
 
 
     @PostMapping("")
-    public ResponseEntity<BookDto> regist(@RequestBody BookDto bookDto) {
-        BookDto registedBook = bookService.regist(bookDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(registedBook);
+    public ResponseEntity<BookDto> regist(@Valid @RequestBody BookDto bookDto, BindingResult error) {
+        if (error.hasErrors()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.regist(bookDto));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<BookDto> update(@PathVariable Long id, @RequestBody BookDto bookDto) {
-        BookDto updatedBook = bookService.update(bookDto, id);
-        return ResponseEntity.ok(updatedBook);
+    public ResponseEntity<BookDto> update(@PathVariable Long id, @Valid @RequestBody BookDto bookDto, BindingResult error) {
+        if (error.hasErrors()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(bookService.update(bookDto, id));
     }
 
     @DeleteMapping("{id}")
@@ -43,33 +50,28 @@ public class ApiBookController {
 
     @PutMapping("{id}/rent")
     public ResponseEntity<BookDto> rent(@PathVariable Long id) {
-        BookDto rentedBook = bookService.rent(id);
-        return ResponseEntity.ok(rentedBook);
+        return ResponseEntity.ok(bookService.rent(id));
     }
 
     @PutMapping("{id}/giveBack")
     public ResponseEntity<BookDto> giveBack(@PathVariable Long id) {
-        BookDto giveBackedBook = bookService.giveBack(id);
-        return ResponseEntity.ok(giveBackedBook);
+        return ResponseEntity.ok(bookService.giveBack(id));
     }
 
 
     @GetMapping("{id}")
     public ResponseEntity<BookDto> show(@PathVariable Long id) {
-        BookDto findBook = bookService.findBookById(id).toBookDto();
-        return ResponseEntity.ok(findBook);
+        return ResponseEntity.ok(bookService.findBookById(id).toBookDto());
     }
 
     @GetMapping("")
     public ResponseEntity<BookDtos> search(SearchDto searchDto) {
-        BookDtos searchBook = bookService.search(searchDto);
-        return ResponseEntity.ok(searchBook);
+        return ResponseEntity.ok(bookService.search(searchDto));
     }
 
     @GetMapping("users/{id}")
     public ResponseEntity<BookDtos> showRentBooks(@PathVariable Long id) {
-        BookDtos rentBooks = bookService.findRentBooks(id);
-        return ResponseEntity.ok(rentBooks);
+        return ResponseEntity.ok(bookService.findRentBooks(id));
     }
 
 }

@@ -58,7 +58,7 @@ public class UserServiceTest extends MockitoTest {
     public void login() {
         when(userRepository.findByUserId(anyString())).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(anyString(),anyString())).thenReturn(true);
-        assertThat(user, is(userService.login(createUser())));
+        assertThat(user, is(userService.login(createUser().getUserId(), createUser().getPassword())));
         verify(userRepository, times((1))).findByUserId(any());
     }
 

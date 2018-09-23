@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -31,6 +34,16 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    public void regist_fail_valid() {
+        UserDto createUser = new UserDto("te", "password", "name");
+
+        ResponseEntity<UserDto> response =
+                template().postForEntity("/api/users", createUser, UserDto.class);
+
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    }
+
+    @Test
     public void regist_fail_unAuthentication() {
         ResponseEntity<UserDto> response = template().postForEntity("/api/users", new UserDto("durin93", "password", "name"), UserDto.class);
         assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
@@ -38,8 +51,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void login() {
-        UserDto loginUser = new UserDto("durin93", "1234","");
-
+        Map<String, String> loginUser =  loginUserMap();
         ResponseEntity<UserDto> response =
                 template().postForEntity("/api/users/authentication", loginUser, UserDto.class);
 
@@ -52,8 +64,10 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void login_fail_unAuthentication() {
+        Map<String, String> loginUser =  loginUserMap();
+        loginUser.replace("password","12345");
         ResponseEntity<UserDto> response =
-                template().postForEntity("/api/users/authentication", new UserDto("durin93", "12345",""), UserDto.class);
+                template().postForEntity("/api/users/authentication", loginUser, UserDto.class);
         assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
     }
 

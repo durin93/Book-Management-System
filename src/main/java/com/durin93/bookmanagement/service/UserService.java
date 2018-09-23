@@ -35,9 +35,9 @@ public class UserService {
         return userRepository.save(userDto.toUser(passwordEncoder)).toUserDto();
     }
 
-    public User login(UserDto userDto) throws UnAuthenticationException {
-        User user = findByUserId(userDto.getUserId());
-        user.matchPassword(userDto.getPassword(), passwordEncoder);
+    public User login(String userId, String password) throws UnAuthenticationException {
+        User user = findByUserId(userId);
+        user.matchPassword(password, passwordEncoder);
         return user;
     }
 
