@@ -25,8 +25,6 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
         ResponseEntity<BookDto> response =
                 template().postForEntity("/api/books", jwtEntity(findManagerUser(), createBookDto), BookDto.class);
 
-        System.out.println(response.toString());
-
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
         assertThat(response.getBody(), is(createBookDto));
         assertNotNull(response.getBody().getLink("self"));
@@ -40,8 +38,6 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
         ResponseEntity<BookDto> response =
                 template().postForEntity("/api/books", jwtEntity(findManagerUser(), createBookDto), BookDto.class);
 
-        System.out.println(response.toString());
-
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
 
@@ -52,8 +48,6 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
 
         ResponseEntity<BookDto> response =
                 template().postForEntity("/api/books", jwtEntity(findManagerUser(), createBookDto), BookDto.class);
-
-        System.out.println(response.toString());
 
         assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     }
