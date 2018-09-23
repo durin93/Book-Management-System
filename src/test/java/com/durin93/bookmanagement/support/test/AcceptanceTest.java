@@ -2,6 +2,7 @@ package com.durin93.bookmanagement.support.test;
 
 import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.dto.BookDto;
+import com.durin93.bookmanagement.dto.UserDto;
 import com.durin93.bookmanagement.repository.UserRepository;
 import com.durin93.bookmanagement.security.JwtManager;
 import org.junit.runner.RunWith;
@@ -97,7 +98,6 @@ public abstract class AcceptanceTest {
     }
 
     protected BookDto createBookDefault() {
-
         return new BookDto("스페인 너는 자유다", "손미나", LocalDate.of(2006, 7, 28), 340, 582);
     }
 
@@ -113,6 +113,12 @@ public abstract class AcceptanceTest {
         return template().
                 postForEntity("/api/books", jwtEntity(findManagerUser(), bookDto), BookDto.class)
                 .getBody();
+    }
+
+    //User
+
+    protected UserDto createUserDefault() {
+        return new UserDto("test1", "password", "name");
     }
 
     protected Map<String,String> loginUserMap(){

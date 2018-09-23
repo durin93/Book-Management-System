@@ -9,8 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDate;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 

@@ -23,7 +23,7 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void regist() {
-        UserDto createUser = new UserDto("test1", "password", "name");
+        UserDto createUser = createUserDefault();
 
         ResponseEntity<UserDto> response =
                 template().postForEntity("/api/users", createUser, UserDto.class);
@@ -35,7 +35,8 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void regist_fail_valid() {
-        UserDto createUser = new UserDto("te", "password", "name");
+        UserDto createUser = createUserDefault();
+        createUser.setUserId("t");
 
         ResponseEntity<UserDto> response =
                 template().postForEntity("/api/users", createUser, UserDto.class);
