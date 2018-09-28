@@ -136,7 +136,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
     public void showRentBooks() {
         BookDto bookDto = createBook(createBookDefault());
         String createBookUrl = getResourceUrl(bookDto, "self");
-        bookDto = requestPUT(createBookUrl + "/rent", jwtEntity(findNormalUser()), BookDto.class).getBody();
+        requestPUT(createBookUrl + "/rent", jwtEntity(findNormalUser()), BookDto.class).getBody();
 
         ResponseEntity<BookDtos> response =
                 requestGET("/api/books/users/" + findNormalUser().getId(), jwtEntity(findNormalUser()), BookDtos.class);

@@ -79,6 +79,30 @@ public class BookTest {
         assertTrue(book.getDeleted());
     }
 
+    @Test
+    public void checkRentable(){
+        assertThat(book.checkRentable(),is(true));
+    }
+
+    @Test
+    public void checkRentable_fail(){
+        book.rentBy(user);
+        thrown.expect(RentalException.class);
+        thrown.expectMessage(ErrorManager.ALREADY_RENT);
+        book.checkRentable();
+        fail();
+    }
+
+    @Test
+    public void checkRender(){
+        assertThat(book.checkRender(),is(true));
+    }
+
+    @Test
+    public void checkRender_already(){
+        book.rentBy(user);
+        assertThat(book.checkRender(),is(false));
+    }
 
     public BookDto createBook() {
         return new BookDto("스페인 너는 자유다", "손미나", LocalDate.of(2006, 7, 28), 340, 582);

@@ -71,4 +71,20 @@ public class ApiUserAcceptanceTest extends AcceptanceTest {
     }
 
 
+    @Test
+    public void show() {
+
+        String resourceUrl = getResourceUrl(createUser(new UserDto("test2", "password", "name")), "self");
+
+        ResponseEntity<UserDto> response =
+                template().getForEntity(resourceUrl, UserDto.class);
+
+        assertNotNull(response.getBody().getLink("self"));
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody().getUserId(), is("test2"));
+
+        log.debug(response.getBody().toString());
+    }
+
+
 }

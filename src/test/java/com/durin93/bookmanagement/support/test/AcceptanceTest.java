@@ -121,6 +121,15 @@ public abstract class AcceptanceTest {
         return new UserDto("test1", "password", "name");
     }
 
+    protected UserDto createUser(UserDto userDto) {
+        return template().
+                postForEntity("/api/users", jwtEntity(findManagerUser(), userDto), UserDto.class)
+                .getBody();
+    }
+
+    protected String getResourceUrl(UserDto userDto, String rel) {
+        return userDto.getLink(rel).getHref();
+    }
     protected Map<String,String> loginUserMap(){
         Map<String, String> loginUser =  new HashMap<>();
         loginUser.put("userId", "durin93");
