@@ -4,19 +4,24 @@ import com.durin93.bookmanagement.exception.JwtAuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Component
 public class JwtInterceptor extends HandlerInterceptorAdapter {
 
     private static final Logger log = LoggerFactory.getLogger(JwtInterceptor.class);
 
     private static final String HEADER_AUTH = "Authorization";
 
-    @Autowired
     private JwtManager jwtManager;
+
+    public JwtInterceptor(JwtManager jwtManager) {
+        this.jwtManager = jwtManager;
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {

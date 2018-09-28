@@ -4,8 +4,6 @@ import com.durin93.bookmanagement.dto.BookDto;
 import com.durin93.bookmanagement.dto.BookDtos;
 import com.durin93.bookmanagement.dto.SearchDto;
 import com.durin93.bookmanagement.service.BookService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -16,8 +14,6 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/books")
 public class ApiBookController {
-
-    private static final Logger log = LoggerFactory.getLogger(ApiBookController.class);
 
     private BookService bookService;
 

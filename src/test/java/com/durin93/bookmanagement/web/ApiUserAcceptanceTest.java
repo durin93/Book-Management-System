@@ -1,7 +1,5 @@
 package com.durin93.bookmanagement.web;
 
-import com.durin93.bookmanagement.dto.BookDto;
-import com.durin93.bookmanagement.dto.BookDtos;
 import com.durin93.bookmanagement.dto.UserDto;
 import com.durin93.bookmanagement.support.test.AcceptanceTest;
 import org.junit.Test;
@@ -10,11 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 
 public class ApiUserAcceptanceTest extends AcceptanceTest {

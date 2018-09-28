@@ -7,12 +7,9 @@ import com.durin93.bookmanagement.exception.UnAuthenticationException;
 import com.durin93.bookmanagement.repository.UserRepository;
 import com.durin93.bookmanagement.security.JwtManager;
 import com.durin93.bookmanagement.support.exception.ErrorManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import sun.security.util.Password;
 
 @Service
 public class UserService {

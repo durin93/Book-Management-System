@@ -3,8 +3,6 @@ package com.durin93.bookmanagement.web;
 import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.dto.UserDto;
 import com.durin93.bookmanagement.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -17,8 +15,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/users")
 public class ApiUserController {
-
-    private static final Logger log = LoggerFactory.getLogger(ApiUserController.class);
 
     private UserService userService;
 
