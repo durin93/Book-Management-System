@@ -2,6 +2,7 @@ package com.durin93.bookmanagement.security;
 
 import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.exception.JwtAuthorizationException;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +28,7 @@ public class JwtManager {
     private int expireHour = 3600000;
     private int expireTime = 3 * expireHour;
 
-
-    public <T> String create(User user) {
+    public String create(User user) {
         String jwt = Jwts.builder()
                 .setHeaderParam("typ", "JWT")
                 .setHeaderParam("alg", HS256)
@@ -39,7 +39,6 @@ public class JwtManager {
                 .compact();
         return jwt;
     }
-
 
     private byte[] generateKey() {
         byte[] key = null;
@@ -56,7 +55,6 @@ public class JwtManager {
             parse(jwt);
             return true;
         } catch (Exception e) {
-            log.debug(e.getMessage());
             throw new JwtAuthorizationException();
         }
     }
@@ -64,14 +62,12 @@ public class JwtManager {
     public String decode() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String jwt = request.getHeader("Authorization");
-        Jws<Claims> claims = null;
         try {
-            claims = parse(jwt);
+            Jws<Claims> claims = parse(jwt);
+            return claims.getBody().get(CLAIM_KEY_USER_ID).toString();
         } catch (Exception e) {
-            log.debug(e.getMessage());
             throw new JwtAuthorizationException();
         }
-        return claims.getBody().get(CLAIM_KEY_USER_ID).toString();
     }
 
     public Jws<Claims> parse(String jwt){

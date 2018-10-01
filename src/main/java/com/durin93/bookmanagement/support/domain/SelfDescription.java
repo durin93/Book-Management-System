@@ -16,12 +16,7 @@ public class SelfDescription extends ResourceSupport {
     }
 
     public Link getLink(String rel) {
-        for (Link link : links) {
-            if (link.getRel().equals(rel)) {
-                return link;
-            }
-        }
-        return null;
+        return links.stream().filter(l -> l.getRel().equals(rel)).findFirst().orElse(null);
     }
 
     public void add(Link link) {

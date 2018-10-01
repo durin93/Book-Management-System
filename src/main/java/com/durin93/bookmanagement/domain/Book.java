@@ -83,12 +83,13 @@ public class Book extends AbstractEntity {
         render = null;
     }
 
-    protected Boolean checkRentable() {
+    public Boolean checkRentable() {
         if (!checkRender()) {
             throw new RentalException(ErrorManager.ALREADY_RENT);
         }
         return true;
     }
+
     public Book delete(User loginUser) {
         loginUser.checkManager();
         checkRentable();

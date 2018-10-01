@@ -18,7 +18,6 @@ public class ItemInfo {
     @Column(nullable = false)
     private int weight;
 
-
     public ItemInfo() {
     }
 
