@@ -22,12 +22,12 @@ public class HistoryService {
         this.historyRepository = historyRepository;
     }
 
-    public History regist(Book book, User loginUser, HistoryType historyType) {
-        return historyRepository.save(new History(book, loginUser, historyType));
-    }
-
     public History show(Long id) {
         return historyRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorManager.NOT_EXIST_HISTORY));
+    }
+
+    public History save(Long bookId, Long userId, HistoryType historyType){
+        return historyRepository.save(new History(bookId, userId, historyType));
     }
 
     public HistoryDtos search(String searchType, Long id) {

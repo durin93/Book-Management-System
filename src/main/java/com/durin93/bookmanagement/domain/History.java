@@ -14,39 +14,43 @@ public class History {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "book_id")
-    private Book book;
+    @Column
+    private Long bookId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private HistoryType historyType;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column
+    private Long userId;
 
+    @Column
     private LocalDateTime createDate = LocalDateTime.now();
 
     public History() {
     }
 
-    public History(Book book, User loginUser, HistoryType historyType) {
-        this.book = book;
-        this.user = loginUser;
+    public History(Long bookId, Long userId, HistoryType historyType) {
+        this.bookId = bookId;
+        this.userId = userId;
         this.historyType = historyType;
     }
 
-    public Book getBook() {
-        return book;
-    }
 
     public HistoryType getHistoryType() {
         return historyType;
     }
 
-    public User getUser() {
-        return user;
+    public Long getId() {
+        return id;
+    }
+
+    public Long getBookId() {
+        return bookId;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 
     public String getCreateDate() {
@@ -54,7 +58,7 @@ public class History {
     }
 
     public HistoryDto toHistoryDto() {
-        HistoryDto historyDto = new HistoryDto(id, user.getId(), book.getId(), historyType, getCreateDate());
+        HistoryDto historyDto = new HistoryDto(id, userId, bookId, historyType, getCreateDate());
         return historyDto.addLink();
     }
 }

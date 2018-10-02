@@ -33,9 +33,6 @@ public class BookServiceTest extends MockitoTest {
     BookRepository bookRepository;
 
     @Mock
-    HistoryService historyService;
-
-    @Mock
     UserService userService;
 
     @InjectMocks

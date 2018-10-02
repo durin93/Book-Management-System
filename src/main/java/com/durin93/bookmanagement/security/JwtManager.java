@@ -3,7 +3,6 @@ package com.durin93.bookmanagement.security;
 import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.exception.JwtAuthorizationException;
 import com.durin93.bookmanagement.support.exception.ErrorManager;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,7 @@ import static io.jsonwebtoken.SignatureAlgorithm.HS256;
 @Component
 public class JwtManager {
 
-    private static final Logger log = LoggerFactory.getLogger(JwtManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(JwtManager.class);
 
     private static final String ISSUER = "dubook.com";
     private static final String CLAIM_KEY_USER_ID = "userId";
@@ -46,7 +45,7 @@ public class JwtManager {
         try {
             key = SALT.getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {
-            log.error("jwt generate error ::: {}", e.getMessage());
+            logger.error("jwt generate error ::: {}", e.getMessage());
         }
         return key;
     }

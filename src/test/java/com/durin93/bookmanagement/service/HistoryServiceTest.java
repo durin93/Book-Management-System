@@ -45,30 +45,26 @@ public class HistoryServiceTest extends MockitoTest {
 
 
     private HistoryType historyType;
-    private User user;
-    private Book book;
     private History history;
 
     @Before
     public void setUp() {
         historyType = HistoryType.UPDATE;
-        user = new User("user", "password", "사용자테스터", Level.USER);
-        book = createBook().toBook();
-        history = new History(book, user, historyType);
-    }
-
-    @Test
-    public void regist() {
-        when(historyRepository.save(any())).thenReturn(history);
-        historyService.regist(book, user, historyType);
-        verify(historyRepository, times((1))).save(any());
+        history = new History(1L, 1L, historyType);
     }
 
     @Test
     public void show() {
         when(historyRepository.findById(anyLong())).thenReturn(Optional.of(history));
-        historyService.show(anyLong());
+        historyService.show(1L);
         verify(historyRepository, times((1))).findById(any());
+    }
+
+    @Test
+    public void save() {
+        when(historyRepository.save(any())).thenReturn(history);
+        assertThat(historyService.save(1L,1L,historyType),is(history));
+        verify(historyRepository, times((1))).save(any());
     }
 
     @Test
