@@ -39,15 +39,15 @@ public class User extends AbstractEntity {
 
     }
 
-    public User(String userId, String password, String name, Level level) {
-        this(userId, password, name);
-        this.level = level;
-    }
-
     public User(String userId, String password, String name) {
         this.userId = userId;
         this.password = password;
         this.name = name;
+    }
+
+    public User(String userId, String password, String name, Level level) {
+        this(userId, password, name);
+        this.level = level;
     }
 
     public String getUserId() {
@@ -55,12 +55,12 @@ public class User extends AbstractEntity {
     }
 
     public UserDto toUserDto() {
-        UserDto userDto = new UserDto(getId(), userId,  name, level);
-        return userDto.addSelfDescription();
+        UserDto userDto = new UserDto(getId(), userId, name, level);
+        return userDto.addLink();
     }
 
     public Boolean matchPassword(String rawPassword, PasswordEncoder passwordEncoder) throws UnAuthenticationException {
-        if (!passwordEncoder.matches(rawPassword,this.password)) {
+        if (!passwordEncoder.matches(rawPassword, this.password)) {
             throw new UnAuthenticationException(ErrorManager.WRONG_PASSWORD);
         }
         return true;

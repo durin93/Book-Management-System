@@ -3,7 +3,7 @@ package com.durin93.bookmanagement.dto;
 import com.durin93.bookmanagement.domain.Book;
 import com.durin93.bookmanagement.domain.ItemInfo;
 import com.durin93.bookmanagement.domain.User;
-import com.durin93.bookmanagement.support.domain.SelfDescription;
+import com.durin93.bookmanagement.support.domain.Links;
 import com.durin93.bookmanagement.web.ApiBookController;
 import com.durin93.bookmanagement.web.ApiUserController;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
@@ -31,7 +32,7 @@ public class BookDto {
     private Boolean isDeleted = false;
 
     @JsonUnwrapped
-    private SelfDescription selfDescription = new SelfDescription();
+    private Links links = new Links();
 
     @NotNull
     private LocalDate releaseDate;
@@ -64,16 +65,16 @@ public class BookDto {
     }
 
 
-    public SelfDescription getSelfDescription() {
-        return selfDescription;
+    public Links getLinks() {
+        return links;
     }
 
     public Link getLink(String rel) {
-        return selfDescription.getLink(rel);
+        return links.getLink(rel);
     }
 
-    public void setSelfDescription(SelfDescription selfDescription) {
-        this.selfDescription = selfDescription;
+    public void setLinks(Links links) {
+        this.links = links;
     }
 
     public String getTitle() {
@@ -140,11 +141,13 @@ public class BookDto {
         return new Book(title, author, convertItemInfo());
     }
 
-    public BookDto addSelfDescription(User render) {
-        selfDescription.add(linkTo(ApiBookController.class).slash(id).withSelfRel());
-        if (render != null) {
-            selfDescription.add(linkTo(ApiUserController.class).slash(render.getId()).withRel("render"));
-        }
+    public BookDto addLink(Optional<User> render) {
+        links.add(linkTo(ApiBookController.class).slash(id).withSelfRel());
+        render.ifPresent(act ->links.add(linkTo(ApiUserController.class).slash(render.get().getId()).withRel("render")));
+        /*
+        if (!render.isPresent()) {
+            links.add(linkTo(ApiUserController.class).slash(render.get().getId()).withRel("render"));
+        }*/
         return this;
     }
 
@@ -165,7 +168,7 @@ public class BookDto {
         if (author != null ? !author.equals(bookDto.author) : bookDto.author != null) return false;
         if (rentable != null ? !rentable.equals(bookDto.rentable) : bookDto.rentable != null) return false;
         if (isDeleted != null ? !isDeleted.equals(bookDto.isDeleted) : bookDto.isDeleted != null) return false;
-        if (selfDescription != null ? !selfDescription.equals(bookDto.selfDescription) : bookDto.selfDescription != null)
+        if (links != null ? !links.equals(bookDto.links) : bookDto.links != null)
             return false;
         return releaseDate != null ? releaseDate.equals(bookDto.releaseDate) : bookDto.releaseDate == null;
     }
@@ -176,7 +179,7 @@ public class BookDto {
         result = 31 * result + (author != null ? author.hashCode() : 0);
         result = 31 * result + (rentable != null ? rentable.hashCode() : 0);
         result = 31 * result + (isDeleted != null ? isDeleted.hashCode() : 0);
-        result = 31 * result + (selfDescription != null ? selfDescription.hashCode() : 0);
+        result = 31 * result + (links != null ? links.hashCode() : 0);
         result = 31 * result + (releaseDate != null ? releaseDate.hashCode() : 0);
         result = 31 * result + pageNumber;
         result = 31 * result + weight;
@@ -191,7 +194,7 @@ public class BookDto {
                 ", author='" + author + '\'' +
                 ", rentable=" + rentable +
                 ", isDeleted=" + isDeleted +
-                ", links=" + selfDescription +
+                ", links=" + links +
                 '}';
     }
 }

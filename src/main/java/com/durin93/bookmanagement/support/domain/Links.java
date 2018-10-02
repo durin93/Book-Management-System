@@ -7,7 +7,7 @@ import org.springframework.hateoas.ResourceSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelfDescription extends ResourceSupport {
+public class Links extends ResourceSupport {
     @JsonIgnoreProperties({"media", "hreflang", "title", "type", "deprecation"})
     private List<Link> links = new ArrayList<>();
 
@@ -15,6 +15,7 @@ public class SelfDescription extends ResourceSupport {
         return links;
     }
 
+    @Override
     public Link getLink(String rel) {
         return links.stream().filter(l -> l.getRel().equals(rel)).findFirst().orElse(null);
     }

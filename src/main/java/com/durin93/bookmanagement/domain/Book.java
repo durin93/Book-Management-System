@@ -8,6 +8,7 @@ import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Optional;
 
 @Entity
 @BatchSize(size = 10)
@@ -25,7 +26,7 @@ public class Book extends AbstractEntity {
     private ItemInfo itemInfo;
 
     @ManyToOne
-    @JoinColumn(name="render_id")
+    @JoinColumn(name = "render_id")
     private User render;
 
     @Column(nullable = false)
@@ -42,15 +43,9 @@ public class Book extends AbstractEntity {
         this.itemInfo = itemInfo;
     }
 
-    public Book(Long id, String title, String author) {
-        super(id);
-        this.title = title;
-        this.author = author;
-    }
-
     public BookDto toBookDto() {
         BookDto bookDto = new BookDto(getId(), title, author, checkRender(), isDeleted, itemInfo);
-        return bookDto.addSelfDescription(render);
+        return bookDto.addLink(Optional.ofNullable(render));
     }
 
     public User getRender() {
@@ -97,7 +92,7 @@ public class Book extends AbstractEntity {
         return this;
     }
 
-    protected Boolean checkRender() {
+    public Boolean checkRender() {
         return render == null;
     }
 

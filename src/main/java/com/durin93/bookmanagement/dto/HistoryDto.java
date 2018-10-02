@@ -1,7 +1,7 @@
 package com.durin93.bookmanagement.dto;
 
 import com.durin93.bookmanagement.support.domain.HistoryType;
-import com.durin93.bookmanagement.support.domain.SelfDescription;
+import com.durin93.bookmanagement.support.domain.Links;
 import com.durin93.bookmanagement.web.ApiHistoryController;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.hateoas.Link;
@@ -21,7 +21,7 @@ public class HistoryDto {
     private String createDate;
 
     @JsonUnwrapped
-    private SelfDescription selfDescription = new SelfDescription();
+    private Links links = new Links();
 
     public HistoryDto() {
     }
@@ -66,22 +66,22 @@ public class HistoryDto {
         this.bookId = bookId;
     }
 
-    public SelfDescription getSelfDescription() {
-        return selfDescription;
+    public Links getLinks() {
+        return links;
     }
 
-    public void setSelfDescription(SelfDescription selfDescription) {
-        this.selfDescription = selfDescription;
+    public void setLinks(Links links) {
+        this.links = links;
     }
 
 
-    public HistoryDto addSelfDescription() {
-        selfDescription.add(linkTo(ApiHistoryController.class).slash(id).withSelfRel());
+    public HistoryDto addLink() {
+        links.add(linkTo(ApiHistoryController.class).slash(id).withSelfRel());
         return this;
     }
 
     public Link getLink(String rel) {
-        return selfDescription.getLink(rel);
+        return links.getLink(rel);
     }
 
 
@@ -91,7 +91,7 @@ public class HistoryDto {
                 ", userId=" + userId +
                 ", bookId=" + bookId +
                 ", historyType=" + historyType +
-                ", selfDescription=" + selfDescription +
+                ", links=" + links +
                 ", createDate='" + createDate + '\'' +
                 '}';
     }

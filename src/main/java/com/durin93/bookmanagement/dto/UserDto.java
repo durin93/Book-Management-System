@@ -2,7 +2,7 @@ package com.durin93.bookmanagement.dto;
 
 import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.support.domain.Level;
-import com.durin93.bookmanagement.support.domain.SelfDescription;
+import com.durin93.bookmanagement.support.domain.Links;
 import com.durin93.bookmanagement.web.ApiUserController;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.hateoas.Link;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -33,7 +32,7 @@ public class UserDto {
     private Level level;
 
     @JsonUnwrapped
-    private SelfDescription selfDescription = new SelfDescription();
+    private Links links = new Links();
 
     public UserDto() {
     }
@@ -80,24 +79,24 @@ public class UserDto {
         this.name = name;
     }
 
-    public SelfDescription getSelfDescription() {
-        return selfDescription;
+    public Links getLinks() {
+        return links;
     }
 
-    public void setSelfDescription(SelfDescription selfDescription) {
-        this.selfDescription = selfDescription;
+    public void setLinks(Links links) {
+        this.links = links;
     }
 
     public Link getLink(String rel) {
-        return selfDescription.getLink(rel);
+        return links.getLink(rel);
     }
 
     public User toUser(PasswordEncoder passwordEncoder) {
         return new User(this.userId, passwordEncoder.encode(this.password), this.name);
     }
 
-    public UserDto addSelfDescription() {
-        selfDescription.add(linkTo(ApiUserController.class).slash(id).withSelfRel());
+    public UserDto addLink() {
+        links.add(linkTo(ApiUserController.class).slash(id).withSelfRel());
         return this;
     }
 
@@ -126,7 +125,7 @@ public class UserDto {
                 ", userId='" + userId + '\'' +
                 ", name='" + name + '\'' +
                 ", level=" + level +
-                ", links=" + selfDescription +
+                ", links=" + links +
                 '}';
     }
 }

@@ -2,6 +2,7 @@ package com.durin93.bookmanagement.security;
 
 import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.exception.JwtAuthorizationException;
+import com.durin93.bookmanagement.support.exception.ErrorManager;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
@@ -50,14 +51,6 @@ public class JwtManager {
         return key;
     }
 
-    public boolean isUsable(String jwt) {
-        try {
-            parse(jwt);
-            return true;
-        } catch (Exception e) {
-            throw new JwtAuthorizationException();
-        }
-    }
 
     public String decode() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
@@ -66,7 +59,7 @@ public class JwtManager {
             Jws<Claims> claims = parse(jwt);
             return claims.getBody().get(CLAIM_KEY_USER_ID).toString();
         } catch (Exception e) {
-            throw new JwtAuthorizationException();
+            throw new JwtAuthorizationException(ErrorManager.INVALID_TOKEN);
         }
     }
 

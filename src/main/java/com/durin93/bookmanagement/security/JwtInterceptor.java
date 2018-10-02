@@ -1,14 +1,16 @@
 package com.durin93.bookmanagement.security;
 
 import com.durin93.bookmanagement.exception.JwtAuthorizationException;
+import com.durin93.bookmanagement.support.exception.ErrorManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.text.html.Option;
+import java.util.Optional;
 
 @Component
 public class JwtInterceptor extends HandlerInterceptorAdapter {
@@ -25,14 +27,16 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        final String token = request.getHeader(HEADER_AUTH);
-        log.debug("token {}", token);
-        if (token != null && jwtManager.isUsable(token)) {
-            return true;
-        } else {
-            throw new JwtAuthorizationException();
-        }
+        final Optional<String> token = Optional.ofNullable(request.getHeader(HEADER_AUTH));
 
+        if(!token.isPresent()){
+            throw new JwtAuthorizationException(ErrorManager.NOT_EXIST_TOKEN);
+        }
+        token.ifPresent(jwt-> jwtManager.parse(token.get()));
+        log.debug("token {}", token.get());
+
+        return true;
     }
 
 }
+

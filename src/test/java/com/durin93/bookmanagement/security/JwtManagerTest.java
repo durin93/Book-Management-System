@@ -11,6 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -31,7 +32,6 @@ public class JwtManagerTest {
     public void create() {
         String jwt = jwtManager.create(user);
         Jws<Claims> claims = jwtManager.parse(jwt);
-        assertTrue(jwtManager.isUsable(jwt));
         assertThat(claims.getHeader().getType(), is("JWT"));
         assertThat(claims.getHeader().getAlgorithm(), is("HS256"));
         assertThat(claims.getBody().get("iss"), is("dubook.com"));

@@ -55,6 +55,6 @@ public class History {
 
     public HistoryDto toHistoryDto() {
         HistoryDto historyDto = new HistoryDto(id, user.getId(), book.getId(), historyType, getCreateDate());
-        return historyDto.addSelfDescription();
+        return historyDto.addLink();
     }
 }

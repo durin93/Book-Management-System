@@ -4,6 +4,7 @@ import com.durin93.bookmanagement.domain.Book;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BookDtos {
 
@@ -18,10 +19,7 @@ public class BookDtos {
     }
 
     public static BookDtos of(List<Book> books) {
-        List<BookDto> bookDtos = new ArrayList<>();
-        for (Book book : books) {
-            bookDtos.add(book.toBookDto());
-        }
+        List<BookDto> bookDtos = books.stream().map(b -> b.toBookDto()).collect(Collectors.toList());
         return new BookDtos(bookDtos);
     }
 

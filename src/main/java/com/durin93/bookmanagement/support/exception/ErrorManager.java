@@ -9,5 +9,7 @@ public class ErrorManager {
     public static final String EXIST_ID = "이미 존재하는 아이디입니다.";
     public static final String NOT_EXIST_ID = "존재하지 않는 아이디입니다.";
     public static final String NOT_EXIST_HISTORY = "존재하지 않는 내역입니다.";
+    public static final String NOT_EXIST_TOKEN = "토큰이 존재하지 않습니다.";
+    public static final String INVALID_TOKEN = "토큰이 유효하지 않습니다.";
 
 }

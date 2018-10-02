@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HistoryDtos {
 
@@ -20,10 +21,7 @@ public class HistoryDtos {
 
 
     public static HistoryDtos of(List<History> histories) {
-        List<HistoryDto> historyDtos = new ArrayList<>();
-        for (History history : histories) {
-            historyDtos.add(history.toHistoryDto());
-        }
+        List<HistoryDto> historyDtos = histories.stream().map(b -> b.toHistoryDto()).collect(Collectors.toList());
         return new HistoryDtos(historyDtos);
     }
 
