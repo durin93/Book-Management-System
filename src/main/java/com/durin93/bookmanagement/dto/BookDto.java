@@ -27,9 +27,9 @@ public class BookDto {
     @Size(min = 3)
     private String author;
 
-    private Boolean rentable = true;
+    private boolean rentable = true;
 
-    private Boolean isDeleted = false;
+    private boolean isDeleted = false;
 
     @JsonUnwrapped
     private Links links = new Links();
@@ -57,7 +57,7 @@ public class BookDto {
         this.weight = weight;
     }
 
-    public BookDto(Long id, String title, String author, Boolean rentable, Boolean isDeleted, ItemInfo itemInfo) {
+    public BookDto(Long id, String title, String author, boolean rentable, boolean isDeleted, ItemInfo itemInfo) {
         this(title, author, itemInfo.getReleaseDate(), itemInfo.getPageNumber(), itemInfo.getWeight());
         this.id = id;
         this.rentable = rentable;
@@ -93,19 +93,19 @@ public class BookDto {
         this.author = author;
     }
 
-    public Boolean getDeleted() {
+    public boolean isDeleted() {
         return isDeleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public void setDeleted(boolean deleted) {
         isDeleted = deleted;
     }
 
-    public Boolean getRentable() {
+    public boolean isRentable() {
         return rentable;
     }
 
-    public void setRentable(Boolean rentable) {
+    public void setRentable(boolean rentable) {
         this.rentable = rentable;
     }
 
@@ -155,6 +155,7 @@ public class BookDto {
         return new ItemInfo(releaseDate, pageNumber, weight);
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -162,14 +163,13 @@ public class BookDto {
 
         BookDto bookDto = (BookDto) o;
 
+        if (rentable != bookDto.rentable) return false;
+        if (isDeleted != bookDto.isDeleted) return false;
         if (pageNumber != bookDto.pageNumber) return false;
         if (weight != bookDto.weight) return false;
         if (title != null ? !title.equals(bookDto.title) : bookDto.title != null) return false;
         if (author != null ? !author.equals(bookDto.author) : bookDto.author != null) return false;
-        if (rentable != null ? !rentable.equals(bookDto.rentable) : bookDto.rentable != null) return false;
-        if (isDeleted != null ? !isDeleted.equals(bookDto.isDeleted) : bookDto.isDeleted != null) return false;
-        if (links != null ? !links.equals(bookDto.links) : bookDto.links != null)
-            return false;
+        if (links != null ? !links.equals(bookDto.links) : bookDto.links != null) return false;
         return releaseDate != null ? releaseDate.equals(bookDto.releaseDate) : bookDto.releaseDate == null;
     }
 
@@ -177,8 +177,8 @@ public class BookDto {
     public int hashCode() {
         int result = title != null ? title.hashCode() : 0;
         result = 31 * result + (author != null ? author.hashCode() : 0);
-        result = 31 * result + (rentable != null ? rentable.hashCode() : 0);
-        result = 31 * result + (isDeleted != null ? isDeleted.hashCode() : 0);
+        result = 31 * result + (rentable ? 1 : 0);
+        result = 31 * result + (isDeleted ? 1 : 0);
         result = 31 * result + (links != null ? links.hashCode() : 0);
         result = 31 * result + (releaseDate != null ? releaseDate.hashCode() : 0);
         result = 31 * result + pageNumber;

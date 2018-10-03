@@ -15,7 +15,7 @@ public enum Level {
         return name;
     }
 
-    public Boolean isManager() {
+    public boolean isManager() {
         return name.equals("관리자");
     }
 }

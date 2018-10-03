@@ -10,12 +10,11 @@ import com.durin93.bookmanagement.repository.BookRepository;
 import com.durin93.bookmanagement.support.exception.ErrorManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
 public class BookService {
 
     private BookRepository bookRepository;
@@ -37,6 +36,10 @@ public class BookService {
         return bookRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorManager.NOT_EXIST_BOOK));
     }
 
+    public Book registBook(BookDto bookDto) {
+        return bookRepository.save(bookDto.toBook());
+    }
+
     public List<Book> findBooksByRender() {
         return bookRepository.findAllByRender(userService.loginUser());
     }
@@ -45,34 +48,35 @@ public class BookService {
         return bookRepository.findAllByRender(user);
     }
 
+    @Transactional
     public BookDto regist(BookDto bookDto) {
         User user = userService.loginUser();
         user.checkManager();
-        Book book = bookDto.toBook();
-        return bookRepository.save(book).toBookDto();
+        return registBook(bookDto).toBookDto();
     }
 
+    @Transactional
     public BookDto update(BookDto bookDto, Long id) {
-        User user = userService.loginUser();
         Book book = findExistBookById(id);
-        book.update(user, bookDto);
+        book.update(userService.loginUser(), bookDto);
         return book.toBookDto();
     }
 
+    @Transactional
     public BookDto delete(Long id) {
-        User user = userService.loginUser();
         Book book = findExistBookById(id);
-        book.delete(user);
+        book.delete(userService.loginUser());
         return book.toBookDto();
     }
 
+    @Transactional
     public BookDto rent(Long id) {
-        User user = userService.loginUser();
         Book book = findExistBookById(id);
-        book.rentBy(user);
+        book.rentBy(userService.loginUser());
         return book.toBookDto();
     }
 
+    @Transactional
     public BookDto giveBack(Long id) {
         Book book = findExistBookById(id);
         book.giveBack();

@@ -59,7 +59,7 @@ public class HistoryAspect {
         return Optional.empty();
     }
 
-    private Boolean checkHistoryType(JoinPoint joinPoint, String methodName) {
+    private boolean checkHistoryType(JoinPoint joinPoint, String methodName) {
         return joinPoint.getSignature().toShortString().contains(methodName);
     }
 

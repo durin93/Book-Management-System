@@ -34,7 +34,7 @@ public class BookTest {
     public void rent() {
         book.rentBy(user);
         assertThat(book.getRender(), is(user));
-        assertFalse(book.checkRender());
+        assertTrue(book.existRender());
     }
 
     @Test
@@ -94,14 +94,14 @@ public class BookTest {
     }
 
     @Test
-    public void checkRender(){
-        assertThat(book.checkRender(),is(true));
+    public void existRender(){
+        assertThat(book.existRender(),is(false));
     }
 
     @Test
-    public void checkRender_already(){
+    public void existRender_already(){
         book.rentBy(user);
-        assertThat(book.checkRender(),is(false));
+        assertThat(book.existRender(),is(true));
     }
 
     public BookDto createBook() {

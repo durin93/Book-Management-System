@@ -1,8 +1,6 @@
 package com.durin93.bookmanagement.service;
 
-import com.durin93.bookmanagement.domain.Book;
 import com.durin93.bookmanagement.domain.History;
-import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.dto.HistoryDtos;
 import com.durin93.bookmanagement.exception.NotFoundException;
 import com.durin93.bookmanagement.repository.HistoryRepository;
@@ -10,10 +8,7 @@ import com.durin93.bookmanagement.support.domain.HistoryType;
 import com.durin93.bookmanagement.support.exception.ErrorManager;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-
 @Service
-@Transactional
 public class HistoryService {
 
     private HistoryRepository historyRepository;

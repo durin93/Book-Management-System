@@ -92,7 +92,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
         String resourceUrl = getResourceUrl(createBook(createBookDefault()), "self");
         ResponseEntity<BookDto> response = requestPUT(resourceUrl + "/rent", jwtEntity(findNormalUser()), BookDto.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertFalse(response.getBody().getRentable());
+        assertFalse(response.getBody().isRentable());
         assertNotNull(response.getBody().getLink("self"));
         assertNotNull(response.getBody().getLink("render"));
     }
@@ -112,7 +112,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
         requestPUT(resourceUrl + "/rent", jwtEntity(findNormalUser()), BookDto.class);
         ResponseEntity<BookDto> response = requestPUT(resourceUrl + "/giveBack", jwtEntity(findNormalUser()), BookDto.class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertTrue(response.getBody().getRentable());
+        assertTrue(response.getBody().isRentable());
         assertNotNull(response.getBody().getLink("self"));
 
     }

@@ -44,7 +44,7 @@ public class Book extends AbstractEntity {
     }
 
     public BookDto toBookDto() {
-        BookDto bookDto = new BookDto(getId(), title, author, checkRender(), isDeleted, itemInfo);
+        BookDto bookDto = new BookDto(getId(), title, author, !existRender(), isDeleted, itemInfo);
         return bookDto.addLink(Optional.ofNullable(render));
     }
 
@@ -72,14 +72,14 @@ public class Book extends AbstractEntity {
     }
 
     public void giveBack() {
-        if (checkRender()) {
+        if (!existRender()) {
             throw new RentalException(ErrorManager.ALREADY_GIVEBACK);
         }
         render = null;
     }
 
-    public Boolean checkRentable() {
-        if (!checkRender()) {
+    public boolean checkRentable() {
+        if (existRender()) {
             throw new RentalException(ErrorManager.ALREADY_RENT);
         }
         return true;
@@ -92,8 +92,8 @@ public class Book extends AbstractEntity {
         return this;
     }
 
-    public Boolean checkRender() {
-        return render == null;
+    public Boolean existRender() {
+        return Optional.ofNullable(render).isPresent();
     }
 
     @Override

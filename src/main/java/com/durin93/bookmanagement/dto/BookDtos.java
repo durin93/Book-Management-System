@@ -31,8 +31,7 @@ public class BookDtos {
         this.books = books;
     }
 
-    public Boolean hasBook(BookDto book) {
-
+    public boolean hasBook(BookDto book) {
         return books.contains(book);
     }
 }

@@ -59,14 +59,14 @@ public class User extends AbstractEntity {
         return userDto.addLink();
     }
 
-    public Boolean matchPassword(String rawPassword, PasswordEncoder passwordEncoder) throws UnAuthenticationException {
+    public boolean matchPassword(String rawPassword, PasswordEncoder passwordEncoder) throws UnAuthenticationException {
         if (!passwordEncoder.matches(rawPassword, this.password)) {
             throw new UnAuthenticationException(ErrorManager.WRONG_PASSWORD);
         }
         return true;
     }
 
-    public Boolean checkManager() {
+    public boolean checkManager() {
         if (!level.isManager()) {
             throw new UnAuthorizationException(ErrorManager.NO_MANAGER);
         }
