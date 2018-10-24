@@ -22,6 +22,7 @@ public class ApiBookAcceptanceTest extends AcceptanceTest {
         assertThat(response.getStatusCode(), is(HttpStatus.CREATED));
         assertThat(response.getBody(), is(createBookDto));
         assertNotNull(response.getBody().getLink("self"));
+        assertNotNull(response.getBody().getSelfDescription());
     }
 
     @Test

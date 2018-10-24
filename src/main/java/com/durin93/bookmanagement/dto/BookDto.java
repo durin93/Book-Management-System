@@ -34,6 +34,8 @@ public class BookDto {
     @JsonUnwrapped
     private Links links = new Links();
 
+    private String selfDescription;
+
     @NotNull
     private LocalDate releaseDate;
 
@@ -137,6 +139,10 @@ public class BookDto {
         this.weight = weight;
     }
 
+    public String getSelfDescription() {
+        return selfDescription;
+    }
+
     public Book toBook() {
         return new Book(title, author, convertItemInfo());
     }
@@ -148,8 +154,10 @@ public class BookDto {
         if (!render.isPresent()) {
             links.add(linkTo(ApiUserController.class).slash(render.get().getId()).withRel("render"));
         }*/
+        this.selfDescription = "https://github.com/durin93/Book-Management-System/wiki/Books-API";
         return this;
     }
+
 
     public ItemInfo convertItemInfo() {
         return new ItemInfo(releaseDate, pageNumber, weight);

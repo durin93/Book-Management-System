@@ -11,7 +11,6 @@ import javax.validation.constraints.Size;
 import java.util.Optional;
 
 @Entity
-@BatchSize(size = 10)
 public class Book extends AbstractEntity {
 
     @Size(min = 3, max = 20)
