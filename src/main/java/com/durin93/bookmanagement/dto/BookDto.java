@@ -4,6 +4,7 @@ import com.durin93.bookmanagement.domain.Book;
 import com.durin93.bookmanagement.domain.ItemInfo;
 import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.support.domain.Links;
+import com.durin93.bookmanagement.support.dto.SelfDescription;
 import com.durin93.bookmanagement.web.ApiBookController;
 import com.durin93.bookmanagement.web.ApiUserController;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
@@ -34,7 +35,7 @@ public class BookDto {
     @JsonUnwrapped
     private Links links = new Links();
 
-    private String selfDescription;
+    private String selfDescription = SelfDescription.BOOKS.getDocs();
 
     @NotNull
     private LocalDate releaseDate;
@@ -154,7 +155,6 @@ public class BookDto {
         if (!render.isPresent()) {
             links.add(linkTo(ApiUserController.class).slash(render.get().getId()).withRel("render"));
         }*/
-        this.selfDescription = "https://github.com/durin93/Book-Management-System/wiki/Books-API";
         return this;
     }
 

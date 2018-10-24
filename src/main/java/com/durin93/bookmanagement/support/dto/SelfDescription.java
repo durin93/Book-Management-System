@@ -1,4 +1,4 @@
-package com.durin93.bookmanagement.support.domain;
+package com.durin93.bookmanagement.support.dto;
 
 public enum SelfDescription {
 
