@@ -3,6 +3,7 @@ package com.durin93.bookmanagement.dto;
 import com.durin93.bookmanagement.domain.User;
 import com.durin93.bookmanagement.support.domain.Level;
 import com.durin93.bookmanagement.support.domain.Links;
+import com.durin93.bookmanagement.support.dto.SelfDescription;
 import com.durin93.bookmanagement.web.ApiUserController;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -33,6 +34,8 @@ public class UserDto {
 
     @JsonUnwrapped
     private Links links = new Links();
+
+    private String selfDescription = SelfDescription.USERS.getDocs();
 
     public UserDto() {
     }
@@ -89,6 +92,10 @@ public class UserDto {
 
     public Link getLink(String rel) {
         return links.getLink(rel);
+    }
+
+    public String getSelfDescription() {
+        return selfDescription;
     }
 
     public User toUser(PasswordEncoder passwordEncoder) {

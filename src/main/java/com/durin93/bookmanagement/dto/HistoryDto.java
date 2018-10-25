@@ -2,6 +2,7 @@ package com.durin93.bookmanagement.dto;
 
 import com.durin93.bookmanagement.support.domain.HistoryType;
 import com.durin93.bookmanagement.support.domain.Links;
+import com.durin93.bookmanagement.support.dto.SelfDescription;
 import com.durin93.bookmanagement.web.ApiHistoryController;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.hateoas.Link;
@@ -22,6 +23,9 @@ public class HistoryDto {
 
     @JsonUnwrapped
     private Links links = new Links();
+
+    private String selfDescription = SelfDescription.HISTORIES.getDocs();
+
 
     public HistoryDto() {
     }
@@ -74,6 +78,9 @@ public class HistoryDto {
         this.links = links;
     }
 
+    public String getSelfDescription() {
+        return selfDescription;
+    }
 
     public HistoryDto addLink() {
         links.add(linkTo(ApiHistoryController.class).slash(id).withSelfRel());
